@@ -1,0 +1,3910 @@
+[
+{
+  "frame": 1,
+  "timestamp": 1775702766.5999,
+  "run_elapsed_s": 0.1,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 2,
+  "timestamp": 1775702768.9034,
+  "run_elapsed_s": 2.4,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 3,
+  "timestamp": 1775702769.0965,
+  "run_elapsed_s": 2.59,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 4,
+  "timestamp": 1775702769.2795,
+  "run_elapsed_s": 2.78,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 5,
+  "timestamp": 1775702769.5182,
+  "run_elapsed_s": 3.01,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 6,
+  "timestamp": 1775702769.6781,
+  "run_elapsed_s": 3.17,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 7,
+  "timestamp": 1775702769.8486,
+  "run_elapsed_s": 3.34,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 8,
+  "timestamp": 1775702770.0203,
+  "run_elapsed_s": 3.52,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 9,
+  "timestamp": 1775702770.1855,
+  "run_elapsed_s": 3.68,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 10,
+  "timestamp": 1775702770.3598,
+  "run_elapsed_s": 3.86,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 11,
+  "timestamp": 1775702770.5495,
+  "run_elapsed_s": 4.05,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 12,
+  "timestamp": 1775702770.7097,
+  "run_elapsed_s": 4.21,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 13,
+  "timestamp": 1775702770.8671,
+  "run_elapsed_s": 4.36,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 14,
+  "timestamp": 1775702771.0217,
+  "run_elapsed_s": 4.52,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 15,
+  "timestamp": 1775702771.1706,
+  "run_elapsed_s": 4.67,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 16,
+  "timestamp": 1775702771.3189,
+  "run_elapsed_s": 4.82,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 17,
+  "timestamp": 1775702771.4719,
+  "run_elapsed_s": 4.97,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 18,
+  "timestamp": 1775702771.627,
+  "run_elapsed_s": 5.12,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 19,
+  "timestamp": 1775702771.7875,
+  "run_elapsed_s": 5.28,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 20,
+  "timestamp": 1775702771.942,
+  "run_elapsed_s": 5.44,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 21,
+  "timestamp": 1775702772.0971,
+  "run_elapsed_s": 5.59,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 22,
+  "timestamp": 1775702772.2485,
+  "run_elapsed_s": 5.74,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 23,
+  "timestamp": 1775702772.3964,
+  "run_elapsed_s": 5.89,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 24,
+  "timestamp": 1775702772.5493,
+  "run_elapsed_s": 6.05,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 25,
+  "timestamp": 1775702772.7066,
+  "run_elapsed_s": 6.2,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 26,
+  "timestamp": 1775702772.8629,
+  "run_elapsed_s": 6.36,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 27,
+  "timestamp": 1775702773.0169,
+  "run_elapsed_s": 6.51,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 28,
+  "timestamp": 1775702773.167,
+  "run_elapsed_s": 6.66,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 29,
+  "timestamp": 1775702773.3151,
+  "run_elapsed_s": 6.81,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 30,
+  "timestamp": 1775702773.4677,
+  "run_elapsed_s": 6.96,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 31,
+  "timestamp": 1775702773.6292,
+  "run_elapsed_s": 7.13,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 32,
+  "timestamp": 1775702773.7849,
+  "run_elapsed_s": 7.28,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 33,
+  "timestamp": 1775702773.9394,
+  "run_elapsed_s": 7.44,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 34,
+  "timestamp": 1775702774.0921,
+  "run_elapsed_s": 7.59,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 35,
+  "timestamp": 1775702774.2407,
+  "run_elapsed_s": 7.74,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 36,
+  "timestamp": 1775702774.3876,
+  "run_elapsed_s": 7.88,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 37,
+  "timestamp": 1775702774.5449,
+  "run_elapsed_s": 8.04,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 38,
+  "timestamp": 1775702774.6998,
+  "run_elapsed_s": 8.2,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 39,
+  "timestamp": 1775702774.8563,
+  "run_elapsed_s": 8.35,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 40,
+  "timestamp": 1775702775.0097,
+  "run_elapsed_s": 8.51,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 41,
+  "timestamp": 1775702775.1615,
+  "run_elapsed_s": 8.66,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 42,
+  "timestamp": 1775702775.3096,
+  "run_elapsed_s": 8.81,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 43,
+  "timestamp": 1775702775.459,
+  "run_elapsed_s": 8.96,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 44,
+  "timestamp": 1775702775.6161,
+  "run_elapsed_s": 9.11,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 45,
+  "timestamp": 1775702775.774,
+  "run_elapsed_s": 9.27,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 46,
+  "timestamp": 1775702775.9457,
+  "run_elapsed_s": 9.44,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 47,
+  "timestamp": 1775702776.1039,
+  "run_elapsed_s": 9.6,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 48,
+  "timestamp": 1775702776.2532,
+  "run_elapsed_s": 9.75,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 49,
+  "timestamp": 1775702776.3994,
+  "run_elapsed_s": 9.9,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 50,
+  "timestamp": 1775702776.5531,
+  "run_elapsed_s": 10.05,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 51,
+  "timestamp": 1775702776.7092,
+  "run_elapsed_s": 10.21,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 52,
+  "timestamp": 1775702776.8623,
+  "run_elapsed_s": 10.36,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 53,
+  "timestamp": 1775702777.0124,
+  "run_elapsed_s": 10.51,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 54,
+  "timestamp": 1775702777.1611,
+  "run_elapsed_s": 10.66,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 55,
+  "timestamp": 1775702777.3074,
+  "run_elapsed_s": 10.8,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 56,
+  "timestamp": 1775702777.4597,
+  "run_elapsed_s": 10.96,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 57,
+  "timestamp": 1775702777.6107,
+  "run_elapsed_s": 11.11,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 58,
+  "timestamp": 1775702777.7672,
+  "run_elapsed_s": 11.26,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 59,
+  "timestamp": 1775702777.9173,
+  "run_elapsed_s": 11.41,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 60,
+  "timestamp": 1775702778.0736,
+  "run_elapsed_s": 11.57,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 61,
+  "timestamp": 1775702778.2255,
+  "run_elapsed_s": 11.72,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 62,
+  "timestamp": 1775702778.3745,
+  "run_elapsed_s": 11.87,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 63,
+  "timestamp": 1775702778.5277,
+  "run_elapsed_s": 12.02,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 64,
+  "timestamp": 1775702778.6851,
+  "run_elapsed_s": 12.18,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 65,
+  "timestamp": 1775702778.8417,
+  "run_elapsed_s": 12.34,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 66,
+  "timestamp": 1775702778.9957,
+  "run_elapsed_s": 12.49,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 67,
+  "timestamp": 1775702779.144,
+  "run_elapsed_s": 12.64,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 68,
+  "timestamp": 1775702779.2894,
+  "run_elapsed_s": 12.79,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 69,
+  "timestamp": 1775702779.4412,
+  "run_elapsed_s": 12.94,
+  "detections": [
+    {
+      "bbox": [
+        795.5105590820312,
+        51.95348358154297,
+        835.9359741210938,
+        147.51939392089844
+      ],
+      "class_name": "person",
+      "confidence": 0.3518,
+      "class_id": 0
+    }
+  ],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 70,
+  "timestamp": 1775702779.606,
+  "run_elapsed_s": 13.1,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 71,
+  "timestamp": 1775702779.7598,
+  "run_elapsed_s": 13.26,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 72,
+  "timestamp": 1775702779.9132,
+  "run_elapsed_s": 13.41,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 73,
+  "timestamp": 1775702780.0628,
+  "run_elapsed_s": 13.56,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 74,
+  "timestamp": 1775702780.2086,
+  "run_elapsed_s": 13.7,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 75,
+  "timestamp": 1775702780.3546,
+  "run_elapsed_s": 13.85,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 76,
+  "timestamp": 1775702780.5067,
+  "run_elapsed_s": 14.0,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 77,
+  "timestamp": 1775702780.6536,
+  "run_elapsed_s": 14.15,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 78,
+  "timestamp": 1775702780.8117,
+  "run_elapsed_s": 14.31,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 79,
+  "timestamp": 1775702780.9696,
+  "run_elapsed_s": 14.47,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 80,
+  "timestamp": 1775702781.1202,
+  "run_elapsed_s": 14.62,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 81,
+  "timestamp": 1775702781.2683,
+  "run_elapsed_s": 14.76,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 82,
+  "timestamp": 1775702781.4374,
+  "run_elapsed_s": 14.93,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 83,
+  "timestamp": 1775702781.5912,
+  "run_elapsed_s": 15.09,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 84,
+  "timestamp": 1775702781.7498,
+  "run_elapsed_s": 15.25,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 85,
+  "timestamp": 1775702781.9048,
+  "run_elapsed_s": 15.4,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 86,
+  "timestamp": 1775702782.0574,
+  "run_elapsed_s": 15.55,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 87,
+  "timestamp": 1775702782.2066,
+  "run_elapsed_s": 15.7,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 88,
+  "timestamp": 1775702782.3547,
+  "run_elapsed_s": 15.85,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 89,
+  "timestamp": 1775702782.5112,
+  "run_elapsed_s": 16.01,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 90,
+  "timestamp": 1775702782.6667,
+  "run_elapsed_s": 16.16,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 91,
+  "timestamp": 1775702782.8225,
+  "run_elapsed_s": 16.32,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 92,
+  "timestamp": 1775702782.9777,
+  "run_elapsed_s": 16.47,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 93,
+  "timestamp": 1775702783.1264,
+  "run_elapsed_s": 16.62,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 94,
+  "timestamp": 1775702783.2746,
+  "run_elapsed_s": 16.77,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 95,
+  "timestamp": 1775702783.423,
+  "run_elapsed_s": 16.92,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 96,
+  "timestamp": 1775702783.5737,
+  "run_elapsed_s": 17.07,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 97,
+  "timestamp": 1775702783.7302,
+  "run_elapsed_s": 17.23,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 98,
+  "timestamp": 1775702783.8854,
+  "run_elapsed_s": 17.38,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 99,
+  "timestamp": 1775702784.0394,
+  "run_elapsed_s": 17.54,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 100,
+  "timestamp": 1775702784.1874,
+  "run_elapsed_s": 17.68,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 101,
+  "timestamp": 1775702784.3621,
+  "run_elapsed_s": 17.86,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 102,
+  "timestamp": 1775702784.5147,
+  "run_elapsed_s": 18.01,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 103,
+  "timestamp": 1775702784.669,
+  "run_elapsed_s": 18.17,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 104,
+  "timestamp": 1775702784.826,
+  "run_elapsed_s": 18.32,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 105,
+  "timestamp": 1775702784.9795,
+  "run_elapsed_s": 18.48,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 106,
+  "timestamp": 1775702785.1279,
+  "run_elapsed_s": 18.62,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 107,
+  "timestamp": 1775702785.2747,
+  "run_elapsed_s": 18.77,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 108,
+  "timestamp": 1775702785.4262,
+  "run_elapsed_s": 18.92,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 109,
+  "timestamp": 1775702785.5803,
+  "run_elapsed_s": 19.08,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 110,
+  "timestamp": 1775702785.7411,
+  "run_elapsed_s": 19.24,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 111,
+  "timestamp": 1775702785.8963,
+  "run_elapsed_s": 19.39,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 112,
+  "timestamp": 1775702786.0525,
+  "run_elapsed_s": 19.55,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 113,
+  "timestamp": 1775702786.203,
+  "run_elapsed_s": 19.7,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 114,
+  "timestamp": 1775702786.3506,
+  "run_elapsed_s": 19.85,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 115,
+  "timestamp": 1775702786.5072,
+  "run_elapsed_s": 20.0,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 116,
+  "timestamp": 1775702786.6612,
+  "run_elapsed_s": 20.16,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 117,
+  "timestamp": 1775702786.8191,
+  "run_elapsed_s": 20.32,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 118,
+  "timestamp": 1775702786.9734,
+  "run_elapsed_s": 20.47,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 119,
+  "timestamp": 1775702787.1253,
+  "run_elapsed_s": 20.62,
+  "detections": [
+    {
+      "bbox": [
+        750.6453857421875,
+        290.31964111328125,
+        1067.2020263671875,
+        399.5495300292969
+      ],
+      "class_name": "bottle",
+      "confidence": 0.3709,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 1,
+      "bbox": [
+        750.6453857421875,
+        290.31964111328125,
+        1067.2020263671875,
+        399.5495300292969
+      ],
+      "class_name": "bottle",
+      "confidence": 0.3709,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 120,
+  "timestamp": 1775702787.282,
+  "run_elapsed_s": 20.78,
+  "detections": [
+    {
+      "bbox": [
+        778.3095092773438,
+        240.24874877929688,
+        1045.4527587890625,
+        368.7971496582031
+      ],
+      "class_name": "bottle",
+      "confidence": 0.4622,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 1,
+      "bbox": [
+        778.3095092773438,
+        240.24874877929688,
+        1045.4527587890625,
+        368.7971496582031
+      ],
+      "class_name": "bottle",
+      "confidence": 0.4622,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 121,
+  "timestamp": 1775702787.4377,
+  "run_elapsed_s": 20.93,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 122,
+  "timestamp": 1775702787.5862,
+  "run_elapsed_s": 21.08,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 123,
+  "timestamp": 1775702787.7356,
+  "run_elapsed_s": 21.23,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 124,
+  "timestamp": 1775702787.8855,
+  "run_elapsed_s": 21.38,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 125,
+  "timestamp": 1775702788.0386,
+  "run_elapsed_s": 21.53,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 126,
+  "timestamp": 1775702788.1882,
+  "run_elapsed_s": 21.68,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 127,
+  "timestamp": 1775702788.336,
+  "run_elapsed_s": 21.83,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 128,
+  "timestamp": 1775702788.4862,
+  "run_elapsed_s": 21.98,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 129,
+  "timestamp": 1775702788.6365,
+  "run_elapsed_s": 22.13,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 130,
+  "timestamp": 1775702788.7936,
+  "run_elapsed_s": 22.29,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 131,
+  "timestamp": 1775702788.9486,
+  "run_elapsed_s": 22.44,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 132,
+  "timestamp": 1775702789.1039,
+  "run_elapsed_s": 22.6,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 133,
+  "timestamp": 1775702789.2547,
+  "run_elapsed_s": 22.75,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 134,
+  "timestamp": 1775702789.4023,
+  "run_elapsed_s": 22.9,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 135,
+  "timestamp": 1775702789.5625,
+  "run_elapsed_s": 23.06,
+  "detections": [],
+  "tracks": [],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 136,
+  "timestamp": 1775702789.7209,
+  "run_elapsed_s": 23.22,
+  "detections": [
+    {
+      "bbox": [
+        295.1893310546875,
+        393.7093200683594,
+        546.34033203125,
+        521.0379028320312
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9237,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        295.1893310546875,
+        393.7093200683594,
+        546.34033203125,
+        521.0379028320312
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9237,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 137,
+  "timestamp": 1775702789.8883,
+  "run_elapsed_s": 23.38,
+  "detections": [
+    {
+      "bbox": [
+        265.8530578613281,
+        400.0721740722656,
+        529.6123046875,
+        514.3795166015625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8967,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        265.8530578613281,
+        400.0721740722656,
+        529.6123046875,
+        514.3795166015625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8967,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 138,
+  "timestamp": 1775702790.0468,
+  "run_elapsed_s": 23.54,
+  "detections": [
+    {
+      "bbox": [
+        234.8546142578125,
+        403.4878234863281,
+        513.0791625976562,
+        512.8377075195312
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8997,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        234.8546142578125,
+        403.4878234863281,
+        513.0791625976562,
+        512.8377075195312
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8997,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 139,
+  "timestamp": 1775702790.2005,
+  "run_elapsed_s": 23.7,
+  "detections": [
+    {
+      "bbox": [
+        204.91380310058594,
+        398.7656555175781,
+        495.4304504394531,
+        513.5100708007812
+      ],
+      "class_name": "bottle",
+      "confidence": 0.931,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        204.91380310058594,
+        398.7656555175781,
+        495.4304504394531,
+        513.5100708007812
+      ],
+      "class_name": "bottle",
+      "confidence": 0.931,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 140,
+  "timestamp": 1775702790.3499,
+  "run_elapsed_s": 23.85,
+  "detections": [
+    {
+      "bbox": [
+        192.41087341308594,
+        405.542724609375,
+        480.54315185546875,
+        510.0343017578125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9278,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        192.41087341308594,
+        405.542724609375,
+        480.54315185546875,
+        510.0343017578125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9278,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 141,
+  "timestamp": 1775702790.5063,
+  "run_elapsed_s": 24.0,
+  "detections": [
+    {
+      "bbox": [
+        169.44674682617188,
+        400.9330139160156,
+        470.8396911621094,
+        498.28564453125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8946,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        169.44674682617188,
+        400.9330139160156,
+        470.8396911621094,
+        498.28564453125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8946,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 142,
+  "timestamp": 1775702790.6606,
+  "run_elapsed_s": 24.16,
+  "detections": [
+    {
+      "bbox": [
+        157.97140502929688,
+        395.9349670410156,
+        459.7466735839844,
+        490.2101745605469
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9296,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        157.97140502929688,
+        395.9349670410156,
+        459.7466735839844,
+        490.2101745605469
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9296,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 143,
+  "timestamp": 1775702790.8295,
+  "run_elapsed_s": 24.33,
+  "detections": [
+    {
+      "bbox": [
+        224.60989379882812,
+        400.5126037597656,
+        452.1732482910156,
+        488.6181335449219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.7514,
+      "class_id": 39
+    },
+    {
+      "bbox": [
+        147.44873046875,
+        396.5009765625,
+        229.0359344482422,
+        475.0799865722656
+      ],
+      "class_name": "bottle",
+      "confidence": 0.5473,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        224.60989379882812,
+        400.5126037597656,
+        452.1732482910156,
+        488.6181335449219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.7514,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    },
+    {
+      "track_id": 3,
+      "bbox": [
+        147.44873046875,
+        396.5009765625,
+        229.0359344482422,
+        475.0799865722656
+      ],
+      "class_name": "bottle",
+      "confidence": 0.5473,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 144,
+  "timestamp": 1775702791.0025,
+  "run_elapsed_s": 24.5,
+  "detections": [
+    {
+      "bbox": [
+        141.6580810546875,
+        398.5014953613281,
+        443.9625549316406,
+        497.107421875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.937,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        141.6580810546875,
+        398.5014953613281,
+        443.9625549316406,
+        497.107421875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.937,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 145,
+  "timestamp": 1775702791.1734,
+  "run_elapsed_s": 24.67,
+  "detections": [
+    {
+      "bbox": [
+        132.7809600830078,
+        397.30914306640625,
+        436.16790771484375,
+        485.95819091796875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.931,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        132.7809600830078,
+        397.30914306640625,
+        436.16790771484375,
+        485.95819091796875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.931,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 146,
+  "timestamp": 1775702791.3268,
+  "run_elapsed_s": 24.82,
+  "detections": [
+    {
+      "bbox": [
+        129.88946533203125,
+        394.1653137207031,
+        433.14166259765625,
+        481.8886413574219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9324,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        129.88946533203125,
+        394.1653137207031,
+        433.14166259765625,
+        481.8886413574219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9324,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 147,
+  "timestamp": 1775702791.4789,
+  "run_elapsed_s": 24.98,
+  "detections": [
+    {
+      "bbox": [
+        124.52079010009766,
+        391.766357421875,
+        428.2171936035156,
+        481.00738525390625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9295,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        124.52079010009766,
+        391.766357421875,
+        428.2171936035156,
+        481.00738525390625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9295,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 148,
+  "timestamp": 1775702791.6449,
+  "run_elapsed_s": 25.14,
+  "detections": [
+    {
+      "bbox": [
+        121.16908264160156,
+        391.73297119140625,
+        424.4425964355469,
+        479.1400146484375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.932,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        121.16908264160156,
+        391.73297119140625,
+        424.4425964355469,
+        479.1400146484375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.932,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 149,
+  "timestamp": 1775702791.8133,
+  "run_elapsed_s": 25.31,
+  "detections": [
+    {
+      "bbox": [
+        116.4771957397461,
+        389.6611022949219,
+        418.23773193359375,
+        480.7933349609375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9308,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        116.4771957397461,
+        389.6611022949219,
+        418.23773193359375,
+        480.7933349609375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9308,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 150,
+  "timestamp": 1775702791.9708,
+  "run_elapsed_s": 25.47,
+  "detections": [
+    {
+      "bbox": [
+        112.86473846435547,
+        389.6224365234375,
+        415.4178466796875,
+        475.9744567871094
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9313,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        112.86473846435547,
+        389.6224365234375,
+        415.4178466796875,
+        475.9744567871094
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9313,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 151,
+  "timestamp": 1775702792.125,
+  "run_elapsed_s": 25.62,
+  "detections": [
+    {
+      "bbox": [
+        111.34172821044922,
+        388.47003173828125,
+        413.3721923828125,
+        473.4862976074219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9147,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        111.34172821044922,
+        388.47003173828125,
+        413.3721923828125,
+        473.4862976074219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9147,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 152,
+  "timestamp": 1775702792.2768,
+  "run_elapsed_s": 25.77,
+  "detections": [
+    {
+      "bbox": [
+        110.1322021484375,
+        386.4568786621094,
+        410.2130126953125,
+        474.45745849609375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.906,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        110.1322021484375,
+        386.4568786621094,
+        410.2130126953125,
+        474.45745849609375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.906,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 153,
+  "timestamp": 1775702792.4276,
+  "run_elapsed_s": 25.92,
+  "detections": [
+    {
+      "bbox": [
+        108.23648834228516,
+        384.2107849121094,
+        407.4605407714844,
+        473.2349548339844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9345,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        108.23648834228516,
+        384.2107849121094,
+        407.4605407714844,
+        473.2349548339844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9345,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 154,
+  "timestamp": 1775702792.5862,
+  "run_elapsed_s": 26.08,
+  "detections": [
+    {
+      "bbox": [
+        106.42830657958984,
+        382.4479064941406,
+        403.705322265625,
+        472.2896423339844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9329,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        106.42830657958984,
+        382.4479064941406,
+        403.705322265625,
+        472.2896423339844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9329,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 155,
+  "timestamp": 1775702792.7379,
+  "run_elapsed_s": 26.23,
+  "detections": [
+    {
+      "bbox": [
+        104.92627716064453,
+        380.984375,
+        400.9945983886719,
+        471.04345703125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9255,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        104.92627716064453,
+        380.984375,
+        400.9945983886719,
+        471.04345703125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9255,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 156,
+  "timestamp": 1775702792.8898,
+  "run_elapsed_s": 26.39,
+  "detections": [
+    {
+      "bbox": [
+        102.31214904785156,
+        379.1155700683594,
+        399.2544250488281,
+        468.8552551269531
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9307,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        102.31214904785156,
+        379.1155700683594,
+        399.2544250488281,
+        468.8552551269531
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9307,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 157,
+  "timestamp": 1775702793.041,
+  "run_elapsed_s": 26.54,
+  "detections": [
+    {
+      "bbox": [
+        101.155029296875,
+        377.79254150390625,
+        397.5294494628906,
+        467.1533508300781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9362,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        101.155029296875,
+        377.79254150390625,
+        397.5294494628906,
+        467.1533508300781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9362,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 158,
+  "timestamp": 1775702793.1913,
+  "run_elapsed_s": 26.69,
+  "detections": [
+    {
+      "bbox": [
+        100.2247085571289,
+        378.79498291015625,
+        396.2301025390625,
+        464.3384704589844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9324,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        100.2247085571289,
+        378.79498291015625,
+        396.2301025390625,
+        464.3384704589844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9324,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 159,
+  "timestamp": 1775702793.342,
+  "run_elapsed_s": 26.84,
+  "detections": [
+    {
+      "bbox": [
+        100.99274444580078,
+        376.09381103515625,
+        394.9266357421875,
+        460.9781188964844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9338,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        100.99274444580078,
+        376.09381103515625,
+        394.9266357421875,
+        460.9781188964844
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9338,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 160,
+  "timestamp": 1775702793.5003,
+  "run_elapsed_s": 27.0,
+  "detections": [
+    {
+      "bbox": [
+        98.94400024414062,
+        375.15240478515625,
+        392.4864501953125,
+        462.2012023925781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9341,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        98.94400024414062,
+        375.15240478515625,
+        392.4864501953125,
+        462.2012023925781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9341,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 161,
+  "timestamp": 1775702793.6556,
+  "run_elapsed_s": 27.15,
+  "detections": [
+    {
+      "bbox": [
+        98.81806182861328,
+        373.8450927734375,
+        391.8260803222656,
+        460.8843994140625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9178,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        98.81806182861328,
+        373.8450927734375,
+        391.8260803222656,
+        460.8843994140625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9178,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 162,
+  "timestamp": 1775702793.8243,
+  "run_elapsed_s": 27.32,
+  "detections": [
+    {
+      "bbox": [
+        96.4122314453125,
+        373.7830810546875,
+        390.3397521972656,
+        463.0742492675781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9272,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.4122314453125,
+        373.7830810546875,
+        390.3397521972656,
+        463.0742492675781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9272,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 163,
+  "timestamp": 1775702793.9806,
+  "run_elapsed_s": 27.48,
+  "detections": [
+    {
+      "bbox": [
+        96.09817504882812,
+        373.1852722167969,
+        385.2967224121094,
+        462.3300476074219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8787,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.09817504882812,
+        373.1852722167969,
+        385.2967224121094,
+        462.3300476074219
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8787,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 164,
+  "timestamp": 1775702794.1353,
+  "run_elapsed_s": 27.63,
+  "detections": [
+    {
+      "bbox": [
+        96.39620971679688,
+        373.3161315917969,
+        381.9597473144531,
+        462.20703125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8898,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.39620971679688,
+        373.3161315917969,
+        381.9597473144531,
+        462.20703125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8898,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 165,
+  "timestamp": 1775702794.2888,
+  "run_elapsed_s": 27.79,
+  "detections": [
+    {
+      "bbox": [
+        96.36266326904297,
+        372.914306640625,
+        377.30340576171875,
+        462.3572998046875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8785,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.36266326904297,
+        372.914306640625,
+        377.30340576171875,
+        462.3572998046875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8785,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 166,
+  "timestamp": 1775702794.4518,
+  "run_elapsed_s": 27.95,
+  "detections": [
+    {
+      "bbox": [
+        96.80732727050781,
+        372.97625732421875,
+        364.41973876953125,
+        460.5453186035156
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8713,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.80732727050781,
+        372.97625732421875,
+        364.41973876953125,
+        460.5453186035156
+      ],
+      "class_name": "bottle",
+      "confidence": 0.8713,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 167,
+  "timestamp": 1775702794.6092,
+  "run_elapsed_s": 28.11,
+  "detections": [
+    {
+      "bbox": [
+        97.5525894165039,
+        373.7328186035156,
+        362.08251953125,
+        456.3818664550781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.869,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        97.5525894165039,
+        373.7328186035156,
+        362.08251953125,
+        456.3818664550781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.869,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 168,
+  "timestamp": 1775702794.7633,
+  "run_elapsed_s": 28.26,
+  "detections": [
+    {
+      "bbox": [
+        98.06654357910156,
+        371.88580322265625,
+        386.01104736328125,
+        453.80462646484375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9233,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        98.06654357910156,
+        371.88580322265625,
+        386.01104736328125,
+        453.80462646484375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9233,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 169,
+  "timestamp": 1775702794.9229,
+  "run_elapsed_s": 28.42,
+  "detections": [
+    {
+      "bbox": [
+        98.02535247802734,
+        371.9244384765625,
+        386.13287353515625,
+        452.5928955078125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9173,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        98.02535247802734,
+        371.9244384765625,
+        386.13287353515625,
+        452.5928955078125
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9173,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 170,
+  "timestamp": 1775702795.0811,
+  "run_elapsed_s": 28.58,
+  "detections": [
+    {
+      "bbox": [
+        96.92922973632812,
+        371.70965576171875,
+        385.6020202636719,
+        454.0566711425781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9184,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.92922973632812,
+        371.70965576171875,
+        385.6020202636719,
+        454.0566711425781
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9184,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 171,
+  "timestamp": 1775702795.239,
+  "run_elapsed_s": 28.74,
+  "detections": [
+    {
+      "bbox": [
+        96.37297058105469,
+        371.6768798828125,
+        384.80230712890625,
+        453.3877868652344
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9174,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.37297058105469,
+        371.6768798828125,
+        384.80230712890625,
+        453.3877868652344
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9174,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 172,
+  "timestamp": 1775702795.4013,
+  "run_elapsed_s": 28.9,
+  "detections": [
+    {
+      "bbox": [
+        96.8353500366211,
+        371.5516662597656,
+        385.67071533203125,
+        452.80322265625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9169,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.8353500366211,
+        371.5516662597656,
+        385.67071533203125,
+        452.80322265625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9169,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 173,
+  "timestamp": 1775702795.5539,
+  "run_elapsed_s": 29.05,
+  "detections": [
+    {
+      "bbox": [
+        96.95653533935547,
+        372.6108093261719,
+        385.5980529785156,
+        454.63916015625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9211,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.95653533935547,
+        372.6108093261719,
+        385.5980529785156,
+        454.63916015625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9211,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 174,
+  "timestamp": 1775702795.7079,
+  "run_elapsed_s": 29.2,
+  "detections": [
+    {
+      "bbox": [
+        97.19271850585938,
+        372.4946594238281,
+        386.687255859375,
+        455.5789794921875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9208,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        97.19271850585938,
+        372.4946594238281,
+        386.687255859375,
+        455.5789794921875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9208,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 175,
+  "timestamp": 1775702795.8619,
+  "run_elapsed_s": 29.36,
+  "detections": [
+    {
+      "bbox": [
+        97.50695037841797,
+        373.2860107421875,
+        386.07977294921875,
+        458.52935791015625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9303,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        97.50695037841797,
+        373.2860107421875,
+        386.07977294921875,
+        458.52935791015625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9303,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 176,
+  "timestamp": 1775702796.0172,
+  "run_elapsed_s": 29.51,
+  "detections": [
+    {
+      "bbox": [
+        97.43675994873047,
+        373.5435791015625,
+        386.03106689453125,
+        459.1486511230469
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9332,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        97.43675994873047,
+        373.5435791015625,
+        386.03106689453125,
+        459.1486511230469
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9332,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 177,
+  "timestamp": 1775702796.1713,
+  "run_elapsed_s": 29.67,
+  "detections": [
+    {
+      "bbox": [
+        97.11312866210938,
+        373.55511474609375,
+        385.942138671875,
+        458.72747802734375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9332,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        97.11312866210938,
+        373.55511474609375,
+        385.942138671875,
+        458.72747802734375
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9332,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 178,
+  "timestamp": 1775702796.3201,
+  "run_elapsed_s": 29.82,
+  "detections": [
+    {
+      "bbox": [
+        97.08710479736328,
+        373.18255615234375,
+        385.87542724609375,
+        458.54742431640625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9305,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        97.08710479736328,
+        373.18255615234375,
+        385.87542724609375,
+        458.54742431640625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9305,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 179,
+  "timestamp": 1775702796.4665,
+  "run_elapsed_s": 29.96,
+  "detections": [
+    {
+      "bbox": [
+        96.80774688720703,
+        371.8484191894531,
+        385.3211669921875,
+        455.06024169921875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9241,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.80774688720703,
+        371.8484191894531,
+        385.3211669921875,
+        455.06024169921875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9241,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 180,
+  "timestamp": 1775702796.6252,
+  "run_elapsed_s": 30.12,
+  "detections": [
+    {
+      "bbox": [
+        96.3333969116211,
+        370.86627197265625,
+        384.08990478515625,
+        452.9825134277344
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9187,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        96.3333969116211,
+        370.86627197265625,
+        384.08990478515625,
+        452.9825134277344
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9187,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 181,
+  "timestamp": 1775702796.7886,
+  "run_elapsed_s": 30.28,
+  "detections": [
+    {
+      "bbox": [
+        95.4781265258789,
+        369.0621032714844,
+        383.87115478515625,
+        452.50750732421875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9171,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        95.4781265258789,
+        369.0621032714844,
+        383.87115478515625,
+        452.50750732421875
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9171,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+},
+{
+  "frame": 182,
+  "timestamp": 1775702796.9408,
+  "run_elapsed_s": 30.44,
+  "detections": [
+    {
+      "bbox": [
+        94.46620178222656,
+        366.87896728515625,
+        382.9910888671875,
+        451.3111572265625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9113,
+      "class_id": 39
+    }
+  ],
+  "tracks": [
+    {
+      "track_id": 2,
+      "bbox": [
+        94.46620178222656,
+        366.87896728515625,
+        382.9910888671875,
+        451.3111572265625
+      ],
+      "class_name": "bottle",
+      "confidence": 0.9113,
+      "is_trash": false,
+      "trash_label": "",
+      "trash_how": ""
+    }
+  ],
+  "pairs": [],
+  "features": {},
+  "events": [],
+  "ml_score": 0.0,
+  "rule_score": 0.0,
+  "transformer_score": 0.0,
+  "final_decision": {}
+}
+]
