@@ -5,7 +5,7 @@
 # ── Detection confidence pools ────────────────────────────────────────────────
 TRACK_HIGH_THRESH   = 0.35
 TRACK_LOW_THRESH    = 0.15
-TRACK_MATCH_THRESH  = 0.30
+TRACK_MATCH_THRESH  = 0.25
 TRACK_SECOND_THRESH = 0.15
 NEW_TRACK_THRESH    = 0.25
 
