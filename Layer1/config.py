@@ -10,11 +10,11 @@ IMGSZ       = 640           # 640 is optimal for RT-DETR; higher hurts CPU perf
 CONF_THRESH = 0.35
 IOU_THRESH  = 0.35
 
-DEVICE = "cpu"              # Change to "mps" (Mac) or "cuda" (GPU) as needed
+DEVICE = "mps"              # Change to "mps" (Mac) or "cuda" (GPU) as needed
 
 KEEP_CLASSES = {
     "person",
-    "bottle", "cup", "backpack", "handbag", "suitcase",
+    "bottle", "cup", "backpack", "handbag",
     "bag", "sports ball",
     "chair", "couch", "tv", "laptop",
     "box", "clock", "vase", "book",

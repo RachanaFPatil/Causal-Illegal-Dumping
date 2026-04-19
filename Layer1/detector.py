@@ -242,7 +242,7 @@ class RTDETRDetector:
         if len(detections) < 2:
             return detections
 
-        boxes  = torch.tensor([d.bbox for d in detections], dtype=torch.float32)
+        boxes = torch.tensor(np.array([d.bbox for d in detections]), dtype=torch.float32)
         scores = torch.tensor([d.confidence for d in detections], dtype=torch.float32)
         keep   = torchvision.ops.nms(boxes, scores, iou_thresh)
         return [detections[i] for i in keep.tolist()]

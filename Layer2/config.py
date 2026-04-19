@@ -28,7 +28,7 @@ LOCK_CLASS_ON_CONFIRM = True
 MAX_MATCH_DISTANCE_PX = 280
 
 # ── Ghost-throw cooldown ──────────────────────────────────────────────────────
-GHOST_COOLDOWN_FRAMES = 20
+GHOST_COOLDOWN_FRAMES = 40
 
 # ── Visualisation ─────────────────────────────────────────────────────────────
 TRACK_ID_COLOR      = (255, 255, 0)
