@@ -1,12 +1,11 @@
 """
 Layer 2 — Bin Tracker
 =====================
-Tracks trash_bin detections across frames using centroid distance matching.
-Enforces two guarantees:
-  1. A permanent ID is only assigned at confirmation (BIN_MIN_FRAMES).
-  2. Once an ID is assigned to a spatial position, NO other bin at a
-     different position can ever receive that same ID — enforced via a
-     confirmed-centroid registry.
+Fix: Use bottom-center of bbox as matching anchor instead of full centroid.
+     When a bin lid opens, the bbox top shifts upward but the BOTTOM EDGE
+     stays fixed. This keeps the track stable through lid-open events so
+     the bin keeps its original ID (e.g. #9001) throughout.
+     BIN_MIN_FRAMES kept at 7 (user-tuned to avoid ghost detections).
 """
 
 import numpy as np
@@ -18,13 +17,41 @@ from Layer1.bin_detector import BinDetection
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-BIN_MATCH_DIST_PX    = 60     # centroid distance to match a detection to a track
-BIN_REGISTRY_DIST_PX = 80      # min distance between two confirmed bin positions
-                                 # — new track closer than this to a confirmed bin
-                                 # is treated as the SAME bin, not a new one
-BIN_MIN_FRAMES         = 12     # frames before a bin gets a permanent ID
-BIN_MAX_LOST_FRAMES    = 240    # ~8s @30fps — survive long occlusions
-BIN_ID_START           = 9000   # no collision with ByteTrack IDs
+BIN_MATCH_DIST_PX    = 60      # centroid distance to match — now uses BOTTOM-center
+BIN_REGISTRY_DIST_PX = 80      # min distance between two confirmed bin BOTTOM-centers
+BIN_MIN_FRAMES         = 7     # user-tuned: avoids ghost detections
+BIN_MAX_LOST_FRAMES    = 240   # ~8s @30fps
+BIN_ID_START           = 9000
+
+
+# ── Anchor helper — BOTTOM-CENTER of bbox ─────────────────────────────────────
+
+def _bottom_center(bbox: np.ndarray) -> Tuple[float, float]:
+    """
+    Return the bottom-center point of a bbox [x1,y1,x2,y2].
+    This point is STABLE even when a bin lid opens (lid extends top upward,
+    bottom edge never moves).
+    """
+    cx = (bbox[0] + bbox[2]) / 2.0
+    cy = float(bbox[3])          # bottom edge
+    return (cx, cy)
+
+
+def _pt_dist(a: Tuple[float, float], b: Tuple[float, float]) -> float:
+    return float(((a[0]-b[0])**2 + (a[1]-b[1])**2) ** 0.5)
+
+
+def _match_score(track_bbox: np.ndarray, det_bbox: np.ndarray) -> float:
+    """
+    Match using BOTTOM-CENTER distance.
+    Lid-open shifts top of bbox upward but bottom stays put →
+    bottom-center distance stays small → same track ID preserved.
+    Two separate physical bins have different bottom-centers → never merge.
+    """
+    dist = _pt_dist(_bottom_center(track_bbox), _bottom_center(det_bbox))
+    if dist <= BIN_MATCH_DIST_PX:
+        return 1.0 - (dist / BIN_MATCH_DIST_PX)
+    return 0.0
 
 
 # ── Data classes ──────────────────────────────────────────────────────────────
@@ -43,14 +70,7 @@ class TrackedBin:
                 (self.bbox[1] + self.bbox[3]) / 2)
 
 
-# ── Internal track ────────────────────────────────────────────────────────────
-
 class _BinTrack:
-    """
-    bin_id is None until the track is confirmed.
-    Once confirmed, the ID is permanent and tied to a spatial centroid
-    stored in BinTracker._confirmed_registry.
-    """
     _next_id: int = BIN_ID_START
 
     def __init__(self, det: BinDetection):
@@ -64,7 +84,6 @@ class _BinTrack:
         self._update_trail()
 
     def assign_id(self) -> int:
-        """Assign next available permanent ID. Call only once."""
         if self.bin_id is None:
             self.bin_id        = _BinTrack._next_id
             _BinTrack._next_id += 1
@@ -89,75 +108,47 @@ class _BinTrack:
     def confirmed(self) -> bool:
         return self.frames_seen >= BIN_MIN_FRAMES
 
+    def bottom_center(self) -> Tuple[float, float]:
+        return _bottom_center(self.bbox)
+
     def centroid(self) -> Tuple[float, float]:
         return ((self.bbox[0] + self.bbox[2]) / 2,
                 (self.bbox[1] + self.bbox[3]) / 2)
-
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
-def _centroid_dist(bbox_a: np.ndarray, bbox_b: np.ndarray) -> float:
-    cx_a = (bbox_a[0] + bbox_a[2]) / 2;  cy_a = (bbox_a[1] + bbox_a[3]) / 2
-    cx_b = (bbox_b[0] + bbox_b[2]) / 2;  cy_b = (bbox_b[1] + bbox_b[3]) / 2
-    return float(((cx_a - cx_b) ** 2 + (cy_a - cy_b) ** 2) ** 0.5)
-
-
-def _pt_dist(a: Tuple[float, float], b: Tuple[float, float]) -> float:
-    return float(((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5)
-
-
-def _match_score(track_bbox: np.ndarray, det_bbox: np.ndarray) -> float:
-    """
-    Centroid-primary matching — bins don't move so centroid is the
-    most reliable cue even when IoU collapses under occlusion.
-    """
-    dist = _centroid_dist(track_bbox, det_bbox)
-    if dist <= BIN_MATCH_DIST_PX:
-        # Score is inverse-distance: closer = higher score
-        return 1.0 - (dist / BIN_MATCH_DIST_PX)
-    return 0.0
 
 
 # ── Main BinTracker ───────────────────────────────────────────────────────────
 
 class BinTracker:
     """
-    _confirmed_registry: Dict[bin_id -> centroid (cx, cy)]
-    Once an ID is registered here, NO new track within BIN_REGISTRY_DIST_PX
-    of that centroid will ever receive a different ID — it will be suppressed
-    or re-associated to the existing confirmed track.
+    Registry uses BOTTOM-CENTER as the spatial anchor.
+    Two confirmed bins with different bottom-centers never merge.
+    Same bin with lid open keeps same bottom-center → same ID.
     """
 
     def __init__(self):
-        self._tracks: List[_BinTrack]                  = []
-        self._confirmed_registry: Dict[int, Tuple[float, float]] = {}
-        self.total_bins_flagged: int                   = 0
-        self._flagged_ids: set                         = set()
-
-    # ── Internal: check if a detection falls inside an already-confirmed zone ─
+        self._tracks: List[_BinTrack]                         = []
+        self._confirmed_registry: Dict[int, Tuple[float, float]] = {}  # bin_id → bottom_center
+        self.total_bins_flagged: int                          = 0
+        self._flagged_ids: set                                = set()
 
     def _find_registry_match(self, det_bbox: np.ndarray) -> Optional[int]:
         """
-        Returns the bin_id of a confirmed bin whose centroid is within
-        BIN_REGISTRY_DIST_PX of this detection, or None if no match.
-        This prevents a new unconfirmed track from spawning near an existing
-        confirmed bin and eventually stealing or duplicating its ID.
+        Check if this detection's bottom-center is near a confirmed bin's
+        registered bottom-center. Uses BIN_REGISTRY_DIST_PX.
         """
-        cx = (det_bbox[0] + det_bbox[2]) / 2
-        cy = (det_bbox[1] + det_bbox[3]) / 2
-        for bid, reg_centroid in self._confirmed_registry.items():
-            if _pt_dist((cx, cy), reg_centroid) <= BIN_REGISTRY_DIST_PX:
+        bc = _bottom_center(det_bbox)
+        for bid, reg_bc in self._confirmed_registry.items():
+            if _pt_dist(bc, reg_bc) <= BIN_REGISTRY_DIST_PX:
                 return bid
         return None
 
     def update(self, detections: List[BinDetection]) -> List[TrackedBin]:
         used_det_indices = set()
 
-        # ── Step 1: Match detections to existing tracks (centroid-primary) ────
+        # ── Step 1: Match detections to existing tracks (bottom-center) ───────
         for bin_track in self._tracks:
             best_score = 0.0
             best_idx   = -1
-
             for i, det in enumerate(detections):
                 if i in used_det_indices:
                     continue
@@ -165,7 +156,6 @@ class BinTracker:
                 if score > best_score:
                     best_score = score
                     best_idx   = i
-
             if best_idx >= 0 and best_score > 0.0:
                 bin_track.update(detections[best_idx])
                 used_det_indices.add(best_idx)
@@ -176,22 +166,14 @@ class BinTracker:
         for i, det in enumerate(detections):
             if i in used_det_indices:
                 continue
-
-            # ⚠️ Spatial registry guard — if this detection is near a
-            # confirmed bin's known position, do NOT create a new track.
-            # It means the confirmed track is temporarily lost (occlusion)
-            # and this detection will re-associate once the track recovers.
             existing_id = self._find_registry_match(det.bbox)
             if existing_id is not None:
-                # Find the lost confirmed track and revive it directly
                 for bin_track in self._tracks:
                     if bin_track.bin_id == existing_id:
                         bin_track.update(det)
                         used_det_indices.add(i)
                         break
-                # If confirmed track was already pruned, skip — avoids ghost
                 continue
-
             self._tracks.append(_BinTrack(det))
 
         # ── Step 3: Remove tracks lost too long ───────────────────────────────
@@ -202,23 +184,17 @@ class BinTracker:
         for bin_track in self._tracks:
             if not bin_track.confirmed:
                 continue
-
-            # Assign permanent ID exactly once
             if bin_track.bin_id is None:
-                # Final spatial check — don't assign a new ID if another
-                # confirmed bin already owns this position
                 existing_id = self._find_registry_match(bin_track.bbox)
                 if existing_id is not None:
-                    # Merge into existing confirmed bin — suppress this track
                     bin_track.bin_id = existing_id
                 else:
                     bin_track.assign_id()
-                    # Register this bin's centroid permanently
-                    self._confirmed_registry[bin_track.bin_id] = bin_track.centroid()
+                    # Register using BOTTOM-CENTER as the stable spatial anchor
+                    self._confirmed_registry[bin_track.bin_id] = bin_track.bottom_center()
                     print(f"[BinTracker] 📍 Bin registered — "
-                          f"ID #{bin_track.bin_id} at {bin_track.centroid()}")
-
-            # Flag once per ID
+                          f"ID #{bin_track.bin_id} "
+                          f"bottom-center={bin_track.bottom_center()}")
             if not bin_track.flagged:
                 bin_track.flagged = True
                 if bin_track.bin_id not in self._flagged_ids:
@@ -228,18 +204,42 @@ class BinTracker:
                           f"ID #{bin_track.bin_id} "
                           f"(total flagged: {self.total_bins_flagged})")
 
-        # ── Step 5: Output — confirmed, active tracks only ────────────────────
+        # ── Step 5: Output confirmed tracks ──────────────────────────────────
+        # Rule: if two confirmed bins are within BIN_REGISTRY_DIST_PX of each
+        # other, suppress the one that is currently LOST (frames_lost > 0).
+        # If both are active, suppress the one with fewer frames_seen.
+        # This keeps the real physical bin visible and hides the phantom.
+
+        confirmed = [t for t in self._tracks if t.confirmed]
+        suppressed_ids: set = set()
+
+        for i, a in enumerate(confirmed):
+            for j, b in enumerate(confirmed):
+                if i >= j:
+                    continue
+                if _pt_dist(a.bottom_center(), b.bottom_center()) > BIN_REGISTRY_DIST_PX:
+                    continue
+                # a and b are too close — suppress the weaker one
+                # Prefer active (frames_lost==0) over lost
+                # Among equal, prefer more frames_seen
+                a_score = (0 if a.frames_lost == 0 else -1) * 10000 + a.frames_seen
+                b_score = (0 if b.frames_lost == 0 else -1) * 10000 + b.frames_seen
+                if a_score >= b_score:
+                    suppressed_ids.add(b.bin_id)
+                else:
+                    suppressed_ids.add(a.bin_id)
+
         output: List[TrackedBin] = []
-        for bin_track in self._tracks:
-            if not bin_track.confirmed or bin_track.frames_lost > 0:
+        for bin_track in confirmed:
+            if bin_track.bin_id in suppressed_ids:
                 continue
             output.append(TrackedBin(
                 bin_id      = bin_track.bin_id,
                 bbox        = bin_track.bbox.copy(),
-                confidence  = bin_track.confidence,
+                confidence  = bin_track.confidence if bin_track.frames_lost == 0
+                              else max(0.3, bin_track.confidence - 0.05 * bin_track.frames_lost),
                 flagged     = bin_track.flagged,
                 frames_seen = bin_track.frames_seen,
                 trail       = bin_track.trail,
             ))
-
         return output

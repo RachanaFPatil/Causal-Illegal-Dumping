@@ -6,7 +6,7 @@ import cv2
 from Layer1.detector       import RTDETRDetector
 from Layer1.trash_detector import TrashDetector
 from Layer2.tracker        import ByteTrackWrapper
-from Layer3.memory         import MemoryEngine
+from Layer3.memory_manager         import MemoryEngine
 from Layer4.dataset        import SequenceCollector
 
 

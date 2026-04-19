@@ -1,1 +1,1 @@
-# Layer 3 — Memory / Temporal State Engine
+# Layer 3 — Spatiotemporal Bin Interaction Feature Extraction

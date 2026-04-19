@@ -1,38 +1,29 @@
-# ─────────────────────────────────────────────────────────
-#  Layer 3/config.py — Memory / Temporal State Engine Configuration
-# ─────────────────────────────────────────────────────────
+# ─────────────────────────────────────────
+#  Layer 3 — Feature Extraction Config
+# ─────────────────────────────────────────
 
-# ── Sequence buffer ───────────────────────────────────────
-SEQUENCE_LENGTH     = 24    # frames of history kept per pair (T)
-                            # must be >= MIN_SEQUENCE_FOR_MODEL used in Layer 4
+# Bin region scaling factors
+# bin_region = shrink the bin bbox by this factor (inner zone = actually inside bin)
+BIN_REGION_SHRINK   = 0.6
+# bin_zone   = expand the bin bbox by this factor (proximity zone around bin)
+BIN_ZONE_EXPAND     = 1.5
 
-# ── Pairing rules ─────────────────────────────────────────
-MAX_PAIR_DISTANCE   = 400   # FIX 1 (was 300): increased to handle car-window
-                            # scenarios where person and object centroids are
-                            # farther apart due to arm extension / throw distance
+# Maximum distance (pixels) between a trash centroid and a bin centroid
+# to be considered associated.  Trash beyond this distance is ignored.
+BIN_ASSOCIATION_MAX_DIST = 400   # px — tune to your camera's FOV
 
-# ── Persistence — keep data alive when a track briefly disappears ────
-MAX_MISSING_FRAMES  = 30    # FIX 2 (was 20): more tolerance for brief occlusions
-                            # thrown objects disappear quickly — give tracker
-                            # more frames to re-acquire before wiping memory
+# Temporal sliding window — how many frames of feature history to keep per pair
+SEQUENCE_WINDOW = 30             # frames  (~1 sec at 30fps)
 
-# ── Feature normalisation ─────────────────────────────────
-# Normalise raw pixel values to roughly [0, 1] so the model sees stable inputs
-NORM_DISTANCE       = 640.0    # divide raw pixel distances by this
-NORM_VELOCITY       = 50.0     # divide pixel/frame velocity by this
-NORM_AREA           = 100000.0 # divide bbox area (px²) by this
+# Entry event signal thresholds
+# downward velocity threshold (pixels/frame) to count as "moving toward bin"
+ENTRY_VY_THRESHOLD  = 1.5
+# minimum frames inside bin_region to confirm a "stay" event
+ENTRY_MIN_FRAMES    = 4
 
-# ── Interaction thresholds ────────────────────────────────
-# FIX 3 (was 90px): the original threshold assumed hand-to-hand proximity.
-# For car-window dumping, the person's centroid is in the middle of the
-# visible body/window area while the object centroid is at arm's tip —
-# measured distance in this video is ~291px even when clearly "holding".
-# 300px covers arm-length + typical bbox centroid offsets.
-HOLD_DISTANCE_PX    = 300
-
-# ── Visualisation ─────────────────────────────────────────
-SHOW_PAIRS          = True
-SHOW_SEQUENCES      = True
-PAIR_LINE_COLOR     = (255, 180, 0)    # orange — pair line
-ACTIVE_PAIR_COLOR   = (0, 255, 180)    # teal   — pair with full sequence buffer
-SEQUENCE_TEXT_COLOR = (255, 255, 255)
+# Debug visualisation colours (BGR)
+DBG_REGION_COLOR    = (0,  200,  0)    # green  — inner bin_region
+DBG_ZONE_COLOR      = (0,  200, 255)   # yellow — outer bin_zone
+DBG_TRAIL_COLOR     = (200, 80, 255)   # purple — trash trajectory
+DBG_LINE_COLOR      = (255, 140,   0)  # orange — trash→bin connector
+DBG_SCORE_COLOR     = (255, 255, 255)  # white  — entry event score text
