@@ -6,37 +6,38 @@ FIXES vs previous version
 --------------------------
 
 FIX 1 — Cup wrongly marked LEGAL (no_l4_event path)
-  BEFORE: When L4 never fires but L5 independently detects possession+release,
-          the finalise() call had no verdict signal and defaulted is_violation=False.
-  AFTER:  When L5 has confirmed possession (coupling_frames >= MIN_COUPLING_FRAMES)
-          AND confirmed release (diverge_frames >= DIVERGE_CONFIRM_FRAMES OR
-          rest_timeout) AND no bins are nearby, the default is VIOLATION, not legal.
-          L4 silence is treated as "no exonerating bin evidence", not "legal".
-
-FIX 2 — MIN_COUPLING_FRAMES too strict (5 frames penalised as "no coupling")
-  BEFORE: MIN_COUPLING_FRAMES=6; 5 frames of cos=0.99 was penalised -0.15.
-  AFTER:  MIN_COUPLING_FRAMES=5. 5 frames of tight cosine coupling IS confirmed
-          possession. The -0.15 penalty is removed when L4 independently
-          confirms illegal_dumping — L4 and L5 agreeing is evidence, not doubt.
-
+FIX 2 — MIN_COUPLING_FRAMES too strict
 FIX 3 — intent=0.00 with no bins pushed toward LEGAL
-  BEFORE: intent_score of 0.0 (no bins) still passed through TRAJ_LEGAL_THRESH
-          check, which only gates overrides to legal — but combined with low
-          evidence conf and no L4 event, resulted in LEGAL default.
-  AFTER:  Intent override to legal ONLY fires when bins are actually present.
-          Zero intent with no bins = no exoneration signal = stays violation.
-
 FIX 4 — L4-confirmed violations had confidence penalised by no_coupling
-  BEFORE: Even when L4 says illegal_dumping with conf=0.80, if L5 coupling was
-          5 frames (just under threshold of 6), the result was penalised.
-  AFTER:  When L4 independently confirms illegal_dumping, the no_coupling
-          penalty is suppressed — L4 evidence is sufficient for violation.
-
 FIX 5 — rest_frames=0 tanked evidence confidence
-  BEFORE: rest_conf = rest_frames / REST_CONFIRM_FRAMES. If object trail was
-          short or rest never confirmed, rest_conf=0 dragged down final_conf.
-  AFTER:  When rest_timeout fires (object may still be moving slowly or trail
-          too short), rest_conf is set to 0.5 (neutral) not 0.0.
+
+FIX 7 (NEW) — L4 wrongly flags LEGAL disposal as VIOLATION due to
+               bin-distance heuristic failure.
+  ROOT CAUSE:
+    Layer 4's _decide() measures the distance between the *final tracked
+    position of the thrown object* and the bin's bottom-center. When a person
+    throws or drops an item INTO a bin, the tracker loses the object the moment
+    it enters the bin — so final_obj_pos is wherever the object was *last seen*
+    (near the person, 700+ px away), not where it landed. L4 therefore sees a
+    huge distance and flags VIOLATION.
+
+  L5 OVERRIDE SIGNALS (all must converge):
+    a) rest_via_timeout=True AND rest_frames==0
+       → object vanished suddenly (not settled on ground = likely entered bin)
+    b) bins_present=True
+       → at least one bin is in the scene
+    c) strong coupling (coupling_frames >= MIN_COUPLING_FRAMES, cos near 1.0)
+       → object was genuinely being carried/held before it vanished
+    d) person approached a bin (bin_approach_score >= BIN_APPROACH_THRESH)
+       → person's trajectory was toward the bin
+
+  When all four signals converge, L5 overrides to LEGAL regardless of L4.
+  This is tracked in the reasoning log as "l5_bin_entry_override".
+
+  SECONDARY SIGNAL — person proximity at disappearance:
+    If the person's last known position was within BIN_PERSON_RADIUS_PX of
+    the bin, treat that as an additional corroboration (lowers the approach
+    threshold needed).
 """
 
 from __future__ import annotations
@@ -66,7 +67,7 @@ GHOST_MIN_MOVEMENT      = 20.0
 COUPLING_WINDOW         = 8
 COUPLING_COS_THRESH     = 0.60
 COUPLING_SPEED_RATIO    = 3.0
-MIN_COUPLING_FRAMES     = 5     # FIX 2: lowered from 6 → 5 (5 frames of cos=0.99 is real)
+MIN_COUPLING_FRAMES     = 5     # FIX 2: lowered from 6 → 5
 MIN_MOVE_PX_FOR_COUPLING = 3.0
 
 # Release detection (L5 independent)
@@ -98,9 +99,22 @@ MIN_CONFIDENCE_TO_ACT   = 0.45
 # Case management
 MAX_CASE_AGE_FRAMES     = 500
 
-# Off-screen release: if a POSSESSED object disappears for this many frames,
-# treat it as released (thrown/dropped out of frame).
+# Off-screen release
 OFFSCREEN_RELEASE_FRAMES = 8
+
+# ── FIX 7: Bin-entry detection thresholds ─────────────────────────────────────
+# Person must have been approaching the bin with at least this score
+# for the "object entered bin" override to fire.
+BIN_APPROACH_THRESH         = 0.35   # lowered intentionally — trajectory to bin
+                                      # doesn't need to be perfect for a throw
+# If the person was within this px of the bin at the time the object
+# disappeared, we treat that as corroboration and lower approach threshold.
+BIN_PERSON_RADIUS_PX        = 350    # px — "person was near bin when object vanished"
+BIN_APPROACH_CORROBORATED   = 0.20   # approach threshold when person was near bin
+# Minimum coupling strength (peak cosine) for bin-entry override to apply.
+# Prevents weak/accidental coupling from triggering the override.
+BIN_ENTRY_MIN_PEAK_COS      = 0.70
+# ──────────────────────────────────────────────────────────────────────────────
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -214,6 +228,12 @@ class _PersonHistory:
         )
         return converge / max(len(trail) - 1, 1), best_bin.bin_id
 
+    def nearest_bin_dist(self, bins: List[TrackedBin]) -> float:
+        """Distance from person's last known position to nearest bin."""
+        if not bins or self.last_pos is None:
+            return float("inf")
+        return min(_dist(self.last_pos, _bottom_center(b.bbox)) for b in bins)
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  Per-pair case
@@ -240,10 +260,8 @@ class _Case:
     rest_frames:       int   = 0
     post_release_frames: int = 0
 
-    # FIX 5: track whether rest was confirmed naturally or via timeout
     rest_via_timeout:  bool  = False
 
-    # FIX 6: frames the tracked object has been absent (off-screen release detection)
     obj_missing_frames: int  = 0
 
     peak_coupling:     float = 0.0
@@ -325,12 +343,7 @@ class DumpingAgent:
                 if ph and ph.last_pos:
                     case.person_trail_snap.append(ph.last_pos)
             else:
-                # FIX 6: object absent from tracker this frame
                 case.obj_missing_frames += 1
-                # If POSSESSED and object vanishes (thrown/flew out of frame),
-                # treat disappearance as release after N consecutive missing frames.
-                # Catches "thrown out of car window": person + object leave frame
-                # simultaneously — velocity diverge never fires because both trails end.
                 if (case.state == _State.POSSESSED
                         and case.obj_missing_frames >= OFFSCREEN_RELEASE_FRAMES):
                     case.state = _State.RELEASED
@@ -451,7 +464,6 @@ class DumpingAgent:
         ph:           Optional[_PersonHistory],
     ) -> Optional[dict]:
 
-        # WATCHING: not yet confirmed possession
         if case.state == _State.WATCHING:
             if case.stored_l4_event and case.stored_l4_event.event != "pending":
                 if case.coupling_frames < MIN_COUPLING_FRAMES:
@@ -460,7 +472,6 @@ class DumpingAgent:
                 case.post_release_frames = 0
             return None
 
-        # POSSESSED: waiting for L5 release signal OR L4 backup
         if case.state == _State.POSSESSED:
             if case.stored_l4_event and case.stored_l4_event.event != "pending":
                 if case.diverge_frames == 0:
@@ -469,7 +480,6 @@ class DumpingAgent:
                     case.post_release_frames = 0
             return None
 
-        # RELEASED: wait for object to come to rest
         if case.state == _State.RELEASED:
             case.post_release_frames += 1
 
@@ -488,16 +498,94 @@ class DumpingAgent:
 
             if case.post_release_frames >= REST_MAX_WAIT:
                 case.state = _State.RESTING
-                case.rest_via_timeout = True          # FIX 5: flag timeout path
+                case.rest_via_timeout = True
                 case.log(f"rest_timeout after {REST_MAX_WAIT}f")
 
             return None
 
-        # RESTING: finalise verdict
         if case.state == _State.RESTING:
             return self._finalise(case, tracked_bins, ph, frame_idx)
 
         return None
+
+    # ── FIX 7: Bin-entry detection ────────────────────────────────────────────
+
+    def _check_bin_entry(
+        self,
+        case:         _Case,
+        tracked_bins: List[TrackedBin],
+        ph:           Optional[_PersonHistory],
+    ) -> Tuple[bool, str]:
+        """
+        Detects the "object entered bin" scenario that Layer 4 cannot handle.
+
+        Returns (override_to_legal: bool, reason_string: str).
+
+        The pattern we look for:
+          1. Object disappeared suddenly (rest_via_timeout=True, rest_frames==0)
+             → object never settled on ground; it vanished mid-air or on impact
+          2. A bin is present in the scene
+          3. Strong possession confirmed (coupling >= MIN_COUPLING_FRAMES,
+             peak_cos >= BIN_ENTRY_MIN_PEAK_COS)
+             → the object was genuinely being carried, not incidentally nearby
+          4. Person was approaching the bin OR person was near the bin
+             when the object disappeared
+             → trajectory corroborates intentional disposal into bin
+
+        Any combination where 1+2+3 are true and 4 is partially true will
+        trigger the override.  The threshold for (4) is loosened when the
+        person was spatially close to the bin (BIN_PERSON_RADIUS_PX).
+        """
+        # Condition 1: object vanished (timeout with zero natural rest frames)
+        obj_vanished = case.rest_via_timeout and case.rest_frames == 0
+
+        if not obj_vanished:
+            return False, ""
+
+        # Condition 2: bin present
+        if not tracked_bins:
+            return False, ""
+
+        # Condition 3: strong coupling (object was genuinely being carried)
+        strong_possession = (
+            case.coupling_frames >= MIN_COUPLING_FRAMES
+            and case.peak_coupling >= BIN_ENTRY_MIN_PEAK_COS
+        )
+        if not strong_possession:
+            return False, ""
+
+        # Condition 4: person trajectory toward bin
+        person_approach, approach_bin_id = (
+            ph.bin_approach_score(tracked_bins) if ph else (0.0, None)
+        )
+
+        # Secondary: was person near bin when object vanished?
+        person_near_bin = False
+        person_bin_dist = float("inf")
+        if ph:
+            person_bin_dist = ph.nearest_bin_dist(tracked_bins)
+            person_near_bin = person_bin_dist <= BIN_PERSON_RADIUS_PX
+
+        # Determine effective approach threshold
+        effective_thresh = (
+            BIN_APPROACH_CORROBORATED if person_near_bin else BIN_APPROACH_THRESH
+        )
+
+        if person_approach < effective_thresh:
+            # Not enough trajectory evidence — don't override
+            return False, ""
+
+        # All signals converge → object entered bin
+        reason = (
+            f"l5_bin_entry_override: "
+            f"obj_vanished=True "
+            f"coupling={case.coupling_frames}f "
+            f"peak_cos={case.peak_coupling:.2f} "
+            f"person_approach={person_approach:.2f} "
+            f"person_bin_dist={person_bin_dist:.0f}px "
+            f"bin#{approach_bin_id}"
+        )
+        return True, reason
 
     # ── Finalise verdict ──────────────────────────────────────────────────────
 
@@ -513,11 +601,6 @@ class DumpingAgent:
         l4_verdict   = ev.event if ev else None
         bins_present = len(tracked_bins) > 0
 
-        # ── FIX 1: Default to violation when possession+release confirmed ─────
-        # Old code: is_violation = (l4_verdict == "illegal_dumping")
-        # Problem:  when l4_verdict is None (L4 never fired), default was False.
-        # Fix:      if L5 confirmed possession AND no bins nearby → VIOLATION.
-        #           L4 silence with no bins = no exoneration = assume illegal.
         l5_confirmed_possession = case.coupling_frames >= MIN_COUPLING_FRAMES
         l5_confirmed_release    = (case.diverge_frames >= DIVERGE_CONFIRM_FRAMES
                                    or case.rest_via_timeout
@@ -528,20 +611,31 @@ class DumpingAgent:
         elif l4_verdict == "legal_disposal":
             is_violation = False
         elif l5_confirmed_possession and l5_confirmed_release and not bins_present:
-            # FIX 1: L4 silent + L5 confirmed possession+release + no bins = VIOLATION
             is_violation = True
         elif l5_confirmed_possession and l5_confirmed_release and bins_present:
-            # L4 silent + bins present → let spatial checks below decide
-            is_violation = True   # start as violation, let bin check override
+            is_violation = True
         else:
-            # Insufficient evidence — not enough to call violation
             is_violation = False
 
         reasons = [ev.reason if ev else "l5_independent_detection"]
 
+        # ── FIX 7: Bin-entry override (runs BEFORE other spatial checks) ──────
+        # This specifically handles the case where L4 said VIOLATION because
+        # the object's final tracked position was far from the bin — but the
+        # object actually entered the bin (tracker lost it on entry).
+        bin_entry_legal, bin_entry_reason = self._check_bin_entry(
+            case, tracked_bins, ph
+        )
+        if bin_entry_legal:
+            is_violation = False
+            reasons.append(bin_entry_reason)
+            case.log(bin_entry_reason)
+
         # ── Signal 1: Multi-bin spatial check ────────────────────────────────
+        # Only run if bin-entry override did NOT already flip to legal.
+        # (If it did, we trust the bin-entry logic over raw distance.)
         final_pos = case.final_obj_pos
-        if final_pos and tracked_bins:
+        if final_pos and tracked_bins and not bin_entry_legal:
             best_d, best_bin_id = _nearest_bin(final_pos, tracked_bins)
             if best_d <= BIN_LEGAL_RADIUS_PX:
                 is_violation = False
@@ -549,8 +643,6 @@ class DumpingAgent:
                 case.log(f"bin_override {best_d:.0f}px")
 
         # ── Signal 2: Two-signal trajectory intent ────────────────────────────
-        # FIX 3: Only use intent override when bins are actually present.
-        #        With no bins, intent=0.0 is meaningless — don't let it gate anything.
         person_approach, approach_bin_id = (
             ph.bin_approach_score(tracked_bins) if ph else (0.0, None)
         )
@@ -616,17 +708,14 @@ class DumpingAgent:
             case.log("low_evidence_blocked")
 
         # FIX 4: Suppress no_coupling penalty when L4 independently confirms violation
-        #        L4 + L5 coupling agreeing on violation = stronger evidence, not weaker.
         l4_confirms_violation = (l4_verdict == "illegal_dumping")
         if (case.coupling_frames < MIN_COUPLING_FRAMES
                 and is_violation
                 and not l4_confirms_violation):
-            # Only penalise when L4 is also silent/disagreeing
             final_conf = max(0.0, final_conf - 0.15)
             reasons.append(f"L5_no_coupling coupling={case.coupling_frames}f")
             case.log("no_coupling_penalty")
         elif case.coupling_frames < MIN_COUPLING_FRAMES and is_violation:
-            # L4 confirmed it — don't penalise, just note it
             reasons.append(f"L5_weak_coupling coupling={case.coupling_frames}f (l4_confirmed)")
             case.log("weak_coupling_noted_l4_confirmed")
 
