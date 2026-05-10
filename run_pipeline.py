@@ -13,10 +13,10 @@ from __future__ import annotations
 
 import argparse
 import time
-
+from collections import deque
 import cv2
 import numpy as np
-
+from enhancer import Enhancer, EnhancementResult, cap_frame_generator
 from Layer1.detector          import RTDETRDetector
 from Layer1.trash_detector    import TrashDetector
 from Layer1.bin_detector      import BinDetector
@@ -64,6 +64,8 @@ def run(source: str, save: bool = False, debug: bool = False) -> None:
     extractor      = BinInteractionFeatureExtractor(debug=debug)
     inference      = DumpingInference()
     agent          = DumpingAgent()
+    enhancer       = Enhancer()
+    frame_buffer   = deque(maxlen=100)   # rolling buffer of last 100 frames
 
     src = int(source) if source.isdigit() else source
     cap = cv2.VideoCapture(src)
@@ -100,6 +102,7 @@ def run(source: str, save: bool = False, debug: bool = False) -> None:
                 frame_idx += 1
 
                 # Layers 1-4
+                frame_buffer.append(frame.copy())
                 dets         = detector.detect(frame)
                 trash_dets   = trash_detector.detect(frame.shape, dets)
                 bin_dets     = bin_detector.detect(frame)
@@ -113,6 +116,54 @@ def run(source: str, save: bool = False, debug: bool = False) -> None:
                 l5_new = agent.update(frame_idx, tracked_objs, tracked_bins, l4_events)
                 if l5_new:
                     last_l5 = l5_new
+                    for verdict in l5_new:
+                        if verdict["event"] == "illegal_dumping":
+                            # AFTER:
+                            person_obj = next(
+                                (o for o in tracked_objs if o.track_id == verdict["person_id"]), None
+                            )
+
+                            # Tiebreak: if another person is within 1.5× the distance to the trash object
+                            # AND has a significantly larger bbox, prefer them (avoids background bystanders).
+                            trash_obj = next(
+                                (o for o in tracked_objs if o.track_id == verdict["object_id"]), None
+                            )
+                            # Pick the largest valid-bbox person — the dominant figure is the actual dumper.
+# Ignore ghost tracks (negative/off-screen bboxes).
+                    def _bbox_area(bbox):
+                        w = bbox[2] - bbox[0]
+                        h = bbox[3] - bbox[1]
+                        return w * h if w > 0 and h > 0 else 0.0
+
+                    all_persons = [
+                        o for o in tracked_objs
+                        if o.class_name == "person" and _bbox_area(o.bbox) > 500
+                    ]
+                    if all_persons:
+                        largest = max(all_persons, key=lambda o: _bbox_area(o.bbox))
+                        if largest.track_id != person_obj.track_id:
+                            print(f"[DEBUG] overriding to person_id={largest.track_id} "
+                                f"(area={_bbox_area(largest.bbox):.0f} vs "
+                                f"{_bbox_area(person_obj.bbox):.0f})")
+                            person_obj = largest
+
+                            if person_obj is not None:
+                                combined = list(frame_buffer) + [frame] + list(cap_frame_generator(cap, 50))
+                                for o in tracked_objs:
+                                    print(f"[DEBUG] track_id={o.track_id} class={o.class_name} bbox={o.bbox}")
+                                print(f"[DEBUG] using person_id={person_obj.track_id} bbox={person_obj.bbox}")
+                                result = enhancer.process_event(
+                                    frame=frame,
+                                    person_bbox=person_obj.bbox,
+                                    person_id=verdict["person_id"],
+                                    pair_id=verdict["pair_id"],
+                                    save_dir="evidence",
+                                    frame_iter=iter(combined),
+                                )
+                                if result.plate_text:
+                                    print(f"[Enhancer] 🚗 PLATE: {result.plate_text} (conf={result.plate_conf:.2f})")
+                                else:
+                                    print(f"[Enhancer] ⚠️ No plate read | blur={result.blur_score:.1f} | scanned={result.frames_scanned}f")
 
                 # Visualise
                 vis = frame.copy()

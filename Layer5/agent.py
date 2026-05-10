@@ -393,6 +393,21 @@ class DumpingAgent:
             if closest_p is None or closest_d > 300:
                 continue
 
+            def _bbox_area(bbox):
+                return (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
+
+            best_area = _bbox_area(closest_p.bbox)
+            for p in persons:
+                if p.track_id == closest_p.track_id:
+                    continue
+                d = _dist(obj_c, _centroid(p.bbox))
+                if d <= closest_d * 1.5:   # within 50% further
+                    area = _bbox_area(p.bbox)
+                    if area > best_area * 1.8:  # at least 80% bigger
+                        closest_p = p
+                        closest_d = d
+                        best_area = area
+
             pair_id = f"person_{closest_p.track_id}_trash_{obj.track_id}"
             case    = self._get_or_create(
                 pair_id, closest_p.track_id, obj.track_id, frame_idx

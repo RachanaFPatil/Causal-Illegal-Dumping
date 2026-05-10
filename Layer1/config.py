@@ -8,7 +8,7 @@ All downstream layers (Layer 2+) are unaffected by new keys here.
 MODEL_NAME  = "rtdetr-l.pt"
 IMGSZ       = 640           # 640 is optimal for RT-DETR; higher hurts CPU perf
 CONF_THRESH = 0.35
-IOU_THRESH  = 0.35
+IOU_THRESH  = 0.20
 
 DEVICE = "mps"              # Change to "mps" (Mac) or "cuda" (GPU) as needed
 
