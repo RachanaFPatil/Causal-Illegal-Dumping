@@ -293,7 +293,7 @@ class DumpingAgent:
     def __init__(self):
         self._cases:   Dict[str, _Case]          = {}
         self._persons: Dict[int, _PersonHistory] = {}
-
+        self._used_trash_ids: set = set()
         self.active_cases:  List[_Case]    = []
         self.frame_signals: Dict[str, str] = {}
 
@@ -753,6 +753,15 @@ class DumpingAgent:
             "frames":          [case.start_frame, frame_idx],
             "reasoning_log":   list(case.reasoning),
         }
+        # ── Guard: trash object already claimed by a prior confirmed violation ──
+        if is_violation and case.trash_id in self._used_trash_ids:
+            is_violation = False
+            reasons.append(f"L5_trash_already_claimed T{case.trash_id}")
+            case.log("trash_claimed_by_prior_violation")
+            final_conf = max(0.0, final_conf - 0.20)
+
+        if is_violation:
+            self._used_trash_ids.add(case.trash_id)   # claim it
 
         case.result = result
         case.locked = True

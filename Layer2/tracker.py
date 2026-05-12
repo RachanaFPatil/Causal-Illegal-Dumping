@@ -261,6 +261,7 @@ def _crop(frame: np.ndarray, bbox: np.ndarray) -> Optional[np.ndarray]:
     return frame[y1:y2, x1:x2]
 
 
+
 # ── Hungarian matching with combined cost ──────────────────────────────────────
 
 def _match_hungarian(
@@ -628,6 +629,8 @@ class ByteTrackWrapper:
                 continue
             if t.age < MIN_TRACK_FRAMES:
                 continue
+            if not self._is_valid_bbox(t.bbox, (H, W)):  # ← ADD HERE
+                continue
 
             tid = t.track_id
             seen_ids.add(tid)
@@ -716,6 +719,17 @@ class ByteTrackWrapper:
                 if t.state == _State.CONFIRMED:
                     t.state = _State.RECOVERABLE
                 logger.debug("[Layer2] ROI recovery FAILED  track_id=%d", t.track_id)
+    @staticmethod
+    def _is_valid_bbox(bbox: np.ndarray, frame_shape: Tuple[int, int]) -> bool:
+            x1, y1, x2, y2 = bbox
+            h, w = frame_shape[:2]
+            if x2 <= x1 or y2 <= y1:
+                return False
+            if x1 >= w or y1 >= h or x2 <= 0 or y2 <= 0:
+                return False
+            if (x2 - x1) * (y2 - y1) < 100:
+                return False
+            return True
 
     def _tag_trash(
         self,

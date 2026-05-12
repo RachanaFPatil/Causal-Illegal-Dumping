@@ -37,6 +37,25 @@ from Layer5.visualizer        import (
 _COL_BG = (20, 20, 20)
 
 
+def _bbox_area(bbox) -> float:
+    """
+    Return w*h for a bbox [x1, y1, x2, y2].
+    Returns 0.0 for ghost/off-screen tracks (negative coords or inverted box).
+    """
+    x1, y1, x2, y2 = bbox[0], bbox[1], bbox[2], bbox[3]
+    w = x2 - x1
+    h = y2 - y1
+    if w <= 0 or h <= 0:
+        return 0.0
+    if x2 < 0 or y2 < 0 or x1 > 10000 or y1 > 10000:
+        return 0.0
+    return float(w * h)
+
+
+def _bbox_centre(bbox):
+    return ((bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2)
+
+
 def _draw_l4_banners(frame, events, W, H):
     visible = [e for e in events if e.event != "pending"]
     if not visible:
@@ -65,7 +84,7 @@ def run(source: str, save: bool = False, debug: bool = False) -> None:
     inference      = DumpingInference()
     agent          = DumpingAgent()
     enhancer       = Enhancer()
-    frame_buffer   = deque(maxlen=100)   # rolling buffer of last 100 frames
+    frame_buffer   = deque(maxlen=100)
 
     src = int(source) if source.isdigit() else source
     cap = cv2.VideoCapture(src)
@@ -118,52 +137,99 @@ def run(source: str, save: bool = False, debug: bool = False) -> None:
                     last_l5 = l5_new
                     for verdict in l5_new:
                         if verdict["event"] == "illegal_dumping":
-                            # AFTER:
+
                             person_obj = next(
-                                (o for o in tracked_objs if o.track_id == verdict["person_id"]), None
+                                (o for o in tracked_objs
+                                 if o.track_id == verdict["person_id"]),
+                                None
                             )
 
-                            # Tiebreak: if another person is within 1.5× the distance to the trash object
-                            # AND has a significantly larger bbox, prefer them (avoids background bystanders).
+                            # Override: pick the person CLOSEST to the trash
+                            # object — more reliable than largest area, which
+                            # tends to pick background bystanders.
+                            # Ghost tracks are rejected via _bbox_area > 500.
                             trash_obj = next(
-                                (o for o in tracked_objs if o.track_id == verdict["object_id"]), None
+                                (o for o in tracked_objs
+                                 if o.track_id == verdict["object_id"]),
+                                None
                             )
-                            # Pick the largest valid-bbox person — the dominant figure is the actual dumper.
-# Ignore ghost tracks (negative/off-screen bboxes).
-                    def _bbox_area(bbox):
-                        w = bbox[2] - bbox[0]
-                        h = bbox[3] - bbox[1]
-                        return w * h if w > 0 and h > 0 else 0.0
-
-                    all_persons = [
-                        o for o in tracked_objs
-                        if o.class_name == "person" and _bbox_area(o.bbox) > 500
-                    ]
-                    if all_persons:
-                        largest = max(all_persons, key=lambda o: _bbox_area(o.bbox))
-                        if largest.track_id != person_obj.track_id:
-                            print(f"[DEBUG] overriding to person_id={largest.track_id} "
-                                f"(area={_bbox_area(largest.bbox):.0f} vs "
-                                f"{_bbox_area(person_obj.bbox):.0f})")
-                            person_obj = largest
-
-                            if person_obj is not None:
-                                combined = list(frame_buffer) + [frame] + list(cap_frame_generator(cap, 50))
-                                for o in tracked_objs:
-                                    print(f"[DEBUG] track_id={o.track_id} class={o.class_name} bbox={o.bbox}")
-                                print(f"[DEBUG] using person_id={person_obj.track_id} bbox={person_obj.bbox}")
-                                result = enhancer.process_event(
-                                    frame=frame,
-                                    person_bbox=person_obj.bbox,
-                                    person_id=verdict["person_id"],
-                                    pair_id=verdict["pair_id"],
-                                    save_dir="evidence",
-                                    frame_iter=iter(combined),
+                            all_persons = [
+                                o for o in tracked_objs
+                                if o.class_name == "person"
+                                and _bbox_area(o.bbox) > 500
+                            ]
+                            if all_persons and trash_obj is not None:
+                                tx, ty = _bbox_centre(trash_obj.bbox)
+                                closest = min(
+                                    all_persons,
+                                    key=lambda o: (
+                                        (_bbox_centre(o.bbox)[0] - tx) ** 2
+                                        + (_bbox_centre(o.bbox)[1] - ty) ** 2
+                                    )
                                 )
-                                if result.plate_text:
-                                    print(f"[Enhancer] 🚗 PLATE: {result.plate_text} (conf={result.plate_conf:.2f})")
-                                else:
-                                    print(f"[Enhancer] ⚠️ No plate read | blur={result.blur_score:.1f} | scanned={result.frames_scanned}f")
+                                if (
+                                    person_obj is None
+                                    or closest.track_id != person_obj.track_id
+                                ):
+                                    print(
+                                        f"[DEBUG] overriding to "
+                                        f"person_id={closest.track_id} "
+                                        f"(closest to trash "
+                                        f"{verdict['object_id']})"
+                                    )
+                                    person_obj = closest
+
+                            # Debug: print all tracks and selected person
+                            if person_obj is not None:
+                                for o in tracked_objs:
+                                    print(
+                                        f"[DEBUG] track_id={o.track_id} "
+                                        f"class={o.class_name} bbox={o.bbox}"
+                                    )
+                                print(
+                                    f"[DEBUG] using person_id="
+                                    f"{person_obj.track_id} "
+                                    f"bbox={person_obj.bbox}"
+                                )
+                            else:
+                                print(
+                                    f"[DEBUG] no valid person found for "
+                                    f"verdict P{verdict['person_id']} "
+                                    f"T{verdict['object_id']} — "
+                                    f"running enhancer on full frame"
+                                )
+
+                            # Run enhancer regardless of whether a valid
+                            # person_obj was found — the plate may still be
+                            # visible in the lookahead frames even if the
+                            # person/trash tracks have gone stale.
+                            combined = list(cap_frame_generator(cap, 150))
+                            result = enhancer.process_event(
+                                frame=frame,
+                                person_bbox=(
+                                    person_obj.bbox
+                                    if person_obj is not None
+                                    else None
+                                ),
+                                person_id=verdict["person_id"],
+                                pair_id=verdict["pair_id"],
+                                save_dir="evidence",
+                                frame_iter=(
+                                    iter(combined) if combined else None
+                                ),
+                            )
+                            if result.plate_text:
+                                print(
+                                    f"[Enhancer] 🚗 PLATE: "
+                                    f"{result.plate_text} "
+                                    f"(conf={result.plate_conf:.2f})"
+                                )
+                            else:
+                                print(
+                                    f"[Enhancer] ⚠️  No plate read | "
+                                    f"blur={result.blur_score:.1f} | "
+                                    f"scanned={result.frames_scanned}f"
+                                )
 
                 # Visualise
                 vis = frame.copy()
