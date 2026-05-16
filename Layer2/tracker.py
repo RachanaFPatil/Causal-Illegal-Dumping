@@ -152,7 +152,11 @@ class _InternalTrack:
         self.age          += 1
         self.hits          = 0
         self._predict_age += 1
-        self.bbox          = self.bbox + self.velocity * 0.5   # decay-extrapolate
+        # Decay-extrapolate; clamp velocity so bbox never flies to infinity
+        vel_magnitude = float(np.linalg.norm(self.velocity))
+        if vel_magnitude > 150.0:           # cap single-frame jump at 150 px
+            self.velocity = self.velocity * (150.0 / (vel_magnitude + 1e-6))
+        self.bbox          = self.bbox + self.velocity * 0.5
         self.frames_lost  += 1
         self.is_active     = False
 
@@ -629,7 +633,11 @@ class ByteTrackWrapper:
                 continue
             if t.age < MIN_TRACK_FRAMES:
                 continue
-            if not self._is_valid_bbox(t.bbox, (H, W)):  # ← ADD HERE
+            if not self._is_valid_bbox(t.bbox, (H, W)):
+                logger.debug(
+                    "[Layer2] Dropping degenerate bbox track_id=%d class=%s bbox=%s",
+                    t.track_id, t.locked_class or t.class_name, t.bbox.tolist(),
+                )
                 continue
 
             tid = t.track_id

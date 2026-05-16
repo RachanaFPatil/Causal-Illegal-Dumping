@@ -3,11 +3,17 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 # ── Detection confidence pools ────────────────────────────────────────────────
-TRACK_HIGH_THRESH   = 0.35
-TRACK_LOW_THRESH    = 0.15
-TRACK_MATCH_THRESH  = 0.25
-TRACK_SECOND_THRESH = 0.15
-NEW_TRACK_THRESH    = 0.25
+# FIX: All thresholds lowered to match the new Layer1 CONF_THRESH=0.20.
+# On CPU, non-person objects arrive at conf 0.20–0.30.
+# Original thresholds (HIGH=0.35, LOW=0.15, NEW=0.25) meant handbag detections
+# at conf=0.22 were in the "low" pool but never birthed (NEW_TRACK_THRESH=0.25).
+
+TRACK_HIGH_THRESH   = 0.25   # was 0.35 — objects at 0.25+ go into high pool
+TRACK_LOW_THRESH    = 0.10   # was 0.15 — objects at 0.10+ go into low pool
+TRACK_MATCH_THRESH  = 0.20   # was 0.25 — IoU match threshold (kept low for small objects)
+TRACK_SECOND_THRESH = 0.10   # was 0.15
+NEW_TRACK_THRESH    = 0.20   # was 0.25 — CRITICAL: objects below this are NEVER born
+                              #            a handbag at conf=0.22 was silently dropped
 
 # ── Track lifecycle ───────────────────────────────────────────────────────────
 MAX_TIME_LOST       = 90
@@ -67,26 +73,14 @@ MAX_RECOVERABLE_FRAMES    = 10
 MAX_TRACK_HISTORY         = 60
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  NEW — ReID Appearance Embedding Parameters
+#  ReID Appearance Embedding Parameters
 # ─────────────────────────────────────────────────────────────────────────────
 
-# Weight blend for the combined matching cost:
-#   total_cost = REID_WEIGHT * appearance_dist
-#              + MOTION_WEIGHT * (1 - iou)
-#              + IOU_WEIGHT * (1 - iou)          [redundant but explicit]
-# Must sum to 1.0
-REID_WEIGHT             = 0.25   # appearance embedding (primary for viewpoint)
-MOTION_WEIGHT           = 0.70   # IoU + Kalman motion (secondary)
-IOU_WEIGHT              = 0.20   # raw IoU (weak cue, tiebreaker)
+REID_WEIGHT             = 0.25
+MOTION_WEIGHT           = 0.70
+IOU_WEIGHT              = 0.20
 
-# Cosine distance threshold: above this → appearance too different → no match
-REID_MAX_COSINE_DIST    = 0.75   # 0=identical 1=opposite; 0.55 is permissive
-
-# Min IoU to still allow a match even if embedding missing (fallback mode)
+REID_MAX_COSINE_DIST    = 0.75
 REID_FALLBACK_IOU       = 0.30
-
-# Whether to use ReID at all (set False to disable and revert to IoU-only)
 REID_ENABLED            = True
-
-# Minimum crop size (pixels) to bother extracting an embedding
 REID_MIN_CROP_SIZE      = 20

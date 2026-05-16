@@ -47,7 +47,6 @@ from collections import deque
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Dict, List, Optional, Tuple
-
 import numpy as np
 
 from Layer2.track_state import TrackedObject
@@ -60,8 +59,8 @@ from Layer4.dumping_inference import DumpingEvent
 # ══════════════════════════════════════════════════════════════════════════════
 
 # Ghost filter
-GHOST_MIN_FRAMES        = 15
-GHOST_MIN_MOVEMENT      = 20.0
+GHOST_MIN_FRAMES        = 10
+GHOST_MIN_MOVEMENT      = 12.0
 
 # Motion coupling (possession detection)
 COUPLING_WINDOW         = 8
@@ -329,8 +328,11 @@ class DumpingAgent:
             ph = self._persons.get(case.person_id)
 
             if self._is_ghost(case, ph):
-                info = (f"frames={ph.frames} move={ph.movement:.0f}px "
-                        f"coupling={case.coupling_frames}f") if ph else "unseen"
+                info = (
+                    f"frames={ph.frames} move={ph.movement:.0f}px "
+                    f"coupling={case.coupling_frames}f"
+                ) if ph else "unseen"
+                print(f"[L5-DEBUG] GHOST suppressed P{case.person_id}: {info}")
                 self.frame_signals[pair_id] = f"GHOST(P{case.person_id}) {info}"
                 continue
 
