@@ -61,6 +61,9 @@ from Layer4.dumping_inference import DumpingEvent
 # Ghost filter
 GHOST_MIN_FRAMES        = 10
 GHOST_MIN_MOVEMENT      = 12.0
+# FIX: a person seen for many frames is real even if barely moving
+# (e.g. person seated inside a car throwing trash out window)
+GHOST_LONG_SEEN_FRAMES  = 30   # if frames >= this, skip movement check
 
 # Motion coupling (possession detection)
 COUPLING_WINDOW         = 8
@@ -787,6 +790,11 @@ class DumpingAgent:
     def _is_ghost(self, case: _Case, ph: Optional[_PersonHistory]) -> bool:
         if ph is None:
             return True
+        # FIX: person seen for many frames is real even if barely moving
+        # (e.g. person seated in car — cumulative movement stays small
+        #  because they don't walk, but they ARE a real person)
+        if ph.frames >= GHOST_LONG_SEEN_FRAMES:
+            return False
         if ph.frames < GHOST_MIN_FRAMES or ph.movement < GHOST_MIN_MOVEMENT:
             if case.coupling_frames >= MIN_COUPLING_FRAMES:
                 return False

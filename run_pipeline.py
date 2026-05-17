@@ -17,12 +17,15 @@ turned into a real line). See agent.py fix notes.
 
 Install:
     pip install fast-alpr fast-plate-ocr easyocr onnxruntime
+    pip install reportlab pillow          # for Penalty/Challan PDF generation
     # OR for NVIDIA GPU:
     pip install onnxruntime-gpu
 
 Usage:
     python run_pipeline.py --source test7.mp4
     python run_pipeline.py --source test7.mp4 --save
+    python run_pipeline.py --source test7.mp4 --location "Outer Ring Road, Bengaluru"
+    python run_pipeline.py --source test7.mp4 --no-challan   # skip challan generation
 """
 
 from __future__ import annotations
@@ -115,6 +118,22 @@ except Exception as _e:
     _enhancer      = None
     print(f"[ALPR] enhancer.py error on load: {_e}")
 
+# ── Penalty & Challan Manager ─────────────────────────────────────────────────
+try:
+    from penalty_manager import PenaltyManager
+    _penalty_manager   = PenaltyManager()
+    CHALLAN_AVAILABLE  = True
+    print("[Challan] penalty_manager.py loaded — challan issuance active")
+except ImportError as _e:
+    CHALLAN_AVAILABLE  = False
+    _penalty_manager   = None
+    print(f"[Challan] penalty_manager.py not available: {_e}")
+    print("          Run: pip install reportlab pillow")
+except Exception as _e:
+    CHALLAN_AVAILABLE  = False
+    _penalty_manager   = None
+    print(f"[Challan] penalty_manager.py error on load: {_e}")
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  Plate overlay
@@ -169,7 +188,8 @@ class _FrameBuffer:
 #  Main pipeline
 # ══════════════════════════════════════════════════════════════════════════════
 
-def run(source: str, save: bool = False) -> None:
+def run(source: str, save: bool = False, location: str = "",
+        enable_challan: bool = True) -> None:
 
     print("[Pipeline] Booting VidTrace...")
 
@@ -195,10 +215,17 @@ def run(source: str, save: bool = False) -> None:
     H   = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
 
+    # Derive a sensible location from the source filename if none provided
+    if not location:
+        import os
+        location = os.path.splitext(os.path.basename(str(source)))[0]
+
+    # Output video name derived from source
+    out_path = f"vidtrace_output.mp4"
+
     writer = None
     if save:
-        out_path = "vidtrace_output.mp4"
-        writer   = cv2.VideoWriter(
+        writer = cv2.VideoWriter(
             out_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (W, H)
         )
         print(f"[Pipeline] Saving → {out_path}")
@@ -214,6 +241,10 @@ def run(source: str, save: bool = False) -> None:
     all_verdicts:     list[dict]      = []
     last_plate:       tuple[str, float] = ("", 0.0)
     alpr_done_events: set[str]        = set()
+
+    # Challan tracking — one challan per confirmed violation event
+    # Maps event pair_id → challan_id so we never double-issue
+    challan_issued:   dict[str, str]  = {}
 
     # ── Main loop ─────────────────────────────────────────────────────────────
     while True:
@@ -245,46 +276,102 @@ def run(source: str, save: bool = False) -> None:
         new_verdicts = agent.update(frame_idx, tracked_objects, tracked_bins, l4_events)
         all_verdicts.extend(new_verdicts)
 
-        # ALPR — run once per confirmed violation
+        # ── ALPR + Challan — run once per confirmed violation ─────────────────
         for verdict in new_verdicts:
             if not verdict.get("violation"):
                 continue
+
             event_key = verdict.get("pair_id", str(frame_idx))
-            if event_key in alpr_done_events:
-                continue
-            alpr_done_events.add(event_key)
 
-            if not ALPR_AVAILABLE or _enhancer is None:
-                continue
+            # ── ALPR (plate reading) ──────────────────────────────────────────
+            if event_key not in alpr_done_events:
+                alpr_done_events.add(event_key)
 
-            best_idx, best_frame_alpr = frame_buf.best_near(frame_idx, window=40)
-            if best_frame_alpr is None:
-                best_frame_alpr = frame
+                alpr_result      = None
+                best_frame_alpr  = frame
 
-            person_id   = verdict.get("person_id")
-            person_bbox = None
-            if person_id is not None:
-                for obj in tracked_objects:
-                    if obj.track_id == person_id:
-                        person_bbox = tuple(obj.bbox.tolist())
-                        break
+                if ALPR_AVAILABLE and _enhancer is not None:
+                    best_idx, best_frame_alpr = frame_buf.best_near(
+                        frame_idx, window=40
+                    )
+                    if best_frame_alpr is None:
+                        best_frame_alpr = frame
 
-            saved_pos  = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
-            frame_iter = cap_frame_generator(cap, n_frames=150)
+                    person_id   = verdict.get("person_id")
+                    person_bbox = None
+                    if person_id is not None:
+                        for obj in tracked_objects:
+                            if obj.track_id == person_id:
+                                person_bbox = tuple(obj.bbox.tolist())
+                                break
 
-            result = _enhancer.process_event(
-                frame       = best_frame_alpr,
-                person_bbox = person_bbox,
-                person_id   = str(person_id),
-                pair_id     = event_key,
-                save_dir    = "evidence",
-                frame_iter  = frame_iter,
-            )
+                    saved_pos  = int(cap.get(cv2.CAP_PROP_POS_FRAMES))
+                    frame_iter = cap_frame_generator(cap, n_frames=150)
 
-            cap.set(cv2.CAP_PROP_POS_FRAMES, saved_pos)
+                    alpr_result = _enhancer.process_event(
+                        frame       = best_frame_alpr,
+                        person_bbox = person_bbox,
+                        person_id   = str(person_id),
+                        pair_id     = event_key,
+                        save_dir    = "evidence",
+                        frame_iter  = frame_iter,
+                    )
 
-            if result.plate_text:
-                last_plate = (result.plate_text, result.plate_conf)
+                    cap.set(cv2.CAP_PROP_POS_FRAMES, saved_pos)
+
+                    if alpr_result.plate_text:
+                        last_plate = (alpr_result.plate_text, alpr_result.plate_conf)
+
+            # ── Challan issuance (only after ALPR is done for this event) ─────
+            # We issue the challan on the first pass where we have ALPR data.
+            # If ALPR is unavailable, we still issue (plate_number=None →
+            # pedestrian-style challan with "Owner Not Found").
+            if (enable_challan
+                    and CHALLAN_AVAILABLE
+                    and _penalty_manager is not None
+                    and event_key not in challan_issued):
+
+                # Use plate from this event's ALPR result if available,
+                # otherwise fall back to last_plate read earlier in the video.
+                if alpr_result is not None and alpr_result.plate_text:
+                    plate_for_challan = alpr_result.plate_text
+                    plate_conf        = alpr_result.plate_conf
+                    evidence_plate    = (alpr_result.saved_paths[0]
+                                         if alpr_result.saved_paths else None)
+                elif last_plate[0]:
+                    plate_for_challan = last_plate[0]
+                    plate_conf        = last_plate[1]
+                    evidence_plate    = None
+                else:
+                    plate_for_challan = None
+                    plate_conf        = 0.0
+                    evidence_plate    = None
+
+                confidence = verdict.get("confidence", 0.0)
+
+                try:
+                    challan_id = _penalty_manager.create_violation(
+                        plate_number              = plate_for_challan,
+                        evidence_video_path       = out_path if save else None,
+                        evidence_plate_image_path = evidence_plate,
+                        location                  = location,
+                        confidence                = confidence,
+                    )
+                    pdf_path = _penalty_manager.generate_challan(challan_id)
+
+                    challan_issued[event_key] = challan_id
+
+                    print(
+                        f"[Challan] ✅ Issued | {challan_id} | "
+                        f"plate={plate_for_challan or 'N/A'} | "
+                        f"conf={confidence:.2f}"
+                    )
+                    if pdf_path:
+                        print(f"[Challan] 📄 PDF → {pdf_path}")
+
+                except Exception as _ce:
+                    print(f"[Challan] ⚠️  Failed to issue challan for "
+                          f"{event_key}: {_ce}")
 
         # Visualise
         vis = frame.copy()
@@ -311,7 +398,7 @@ def run(source: str, save: bool = False) -> None:
             cv2.FONT_HERSHEY_SIMPLEX, 0.45, (150, 150, 150), 1, cv2.LINE_AA,
         )
 
-        cv2.imshow("VidTrace — Illegal Dumping Detection", vis)
+        cv2.imshow("VidTrace \u2014 Illegal Dumping Detection", vis)
         if writer:
             writer.write(vis)
 
@@ -328,7 +415,7 @@ def run(source: str, save: bool = False) -> None:
             show_l5_reason = not show_l5_reason
             print(f"[Pipeline] L5 reasoning: {'ON' if show_l5_reason else 'OFF'}")
 
-    # Cleanup
+    # ── Cleanup ───────────────────────────────────────────────────────────────
     cap.release()
     if writer:
         writer.release()
@@ -336,6 +423,7 @@ def run(source: str, save: bool = False) -> None:
 
     print(f"\n[Pipeline] Done. Frames: {frame_idx}")
 
+    # ── Final Layer 5 summary ─────────────────────────────────────────────────
     final_results = agent.get_all_results()
     if final_results:
         print(f"\n[Layer5] ══ Final Confirmed Events ({len(final_results)}) ══")
@@ -359,6 +447,38 @@ def run(source: str, save: bool = False) -> None:
     if last_plate[0]:
         print(f"\n[Enhancer] 🚗 Final plate: {last_plate[0]} (conf={last_plate[1]:.2f})")
 
+    # ── Final Challan summary ─────────────────────────────────────────────────
+    if challan_issued:
+        print(f"\n[Challan] ══ Challans Issued This Run ({len(challan_issued)}) ══")
+        for ev_key, cid in challan_issued.items():
+            print(f"  Event {ev_key} → {cid}")
+
+        # Run escalation check in case any existing violations are overdue
+        if CHALLAN_AVAILABLE and _penalty_manager is not None:
+            try:
+                escalated = _penalty_manager.check_and_escalate()
+                if escalated:
+                    print(f"[Challan] ⚡ {escalated} existing violation(s) escalated")
+            except Exception as _esc_e:
+                print(f"[Challan] Escalation check failed: {_esc_e}")
+
+        # Print summary from DB
+        if CHALLAN_AVAILABLE and _penalty_manager is not None:
+            try:
+                s = _penalty_manager.summary()
+                print(
+                    f"[Challan] DB Summary — "
+                    f"total={s['total']} | "
+                    f"pending={s['pending']} | "
+                    f"paid={s['paid']} | "
+                    f"escalated={s['escalated']} | "
+                    f"collected=Rs.{s['collected'] or 0:.2f}"
+                )
+            except Exception:
+                pass
+    else:
+        print("\n[Challan] No challans issued this run.")
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  Entry point
@@ -366,7 +486,19 @@ def run(source: str, save: bool = False) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="VidTrace — Illegal Dumping Detection")
-    parser.add_argument("--source", default="0")
-    parser.add_argument("--save",   action="store_true")
+    parser.add_argument("--source",      default="0",
+                        help="Video file path or camera index")
+    parser.add_argument("--save",        action="store_true",
+                        help="Save annotated output video as vidtrace_output.mp4")
+    parser.add_argument("--location",    default="",
+                        help="Location string for challan (e.g. 'Outer Ring Road, Bengaluru')")
+    parser.add_argument("--no-challan",  action="store_true",
+                        help="Disable automatic challan issuance")
     args = parser.parse_args()
-    run(args.source, args.save)
+
+    run(
+        source         = args.source,
+        save           = args.save,
+        location       = args.location,
+        enable_challan = not args.no_challan,
+    )

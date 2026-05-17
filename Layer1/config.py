@@ -1,28 +1,23 @@
 """
 Layer 1 — Configuration
 Robust CCTV AI Engine: adds lighting analysis and dual-stream CLAHE settings.
-All downstream layers (Layer 2+) are unaffected by new keys here.
 
-WINDOWS/CPU FIX: CONF_THRESH lowered 0.35 → 0.20 and IOU_THRESH raised
-  0.20 → 0.45 for CPU inference.
+WINDOWS/CPU FIX: CONF_THRESH lowered 0.35 → 0.18 and IOU_THRESH raised
+  to 0.45 for CPU inference.
 
-  WHY: On Apple MPS (Mac), RT-DETR returns handbag/bottle/object detections
-  at conf ~0.35-0.50. On CPU (Windows), the same model returns these
-  non-person objects at conf ~0.20-0.30 — persons still score ~0.85+.
-  With CONF_THRESH=0.35, all non-person objects are filtered out before
-  they reach the tracker. The diagnose output confirmed only 2 person
-  detections on frame 1 with no objects — this threshold is why.
+  WHY CONF_THRESH=0.18 (was 0.20):
+    Previous round found non-person objects (handbag) at 0.20–0.30 on CPU.
+    Small thrown objects (tissue, small bag, cup) score even lower: 0.15–0.22.
+    Lowering to 0.18 captures these without significantly increasing
+    false positives (persons still score 0.75+).
 
-  IOU_THRESH raised 0.20 → 0.45: the NMS pass at 0.20 was too aggressive
-  on CPU and was suppressing small object detections that slightly overlapped
-  with person bboxes.
+  IOU_THRESH=0.45: standard NMS threshold, prevents over-suppression.
 
-DEVICE is now computed at import time using auto-detection.
-'mps' is only selected on Apple Silicon Macs. On Windows this
-always resolves to 'cuda' (if available) or 'cpu'.
+DEVICE auto-detection: 'mps' only on Apple Silicon Mac. Windows → cuda/cpu.
 """
 import torch
 import platform
+
 
 def _auto_device() -> str:
     if torch.cuda.is_available():
@@ -33,20 +28,18 @@ def _auto_device() -> str:
         return "mps"
     return "cpu"
 
+
 DEVICE = _auto_device()
 
 # ── Model ─────────────────────────────────────────────────────────────────────
 MODEL_NAME  = "rtdetr-l.pt"
-IMGSZ       = 640           # 640 is optimal for RT-DETR; higher hurts CPU perf
+IMGSZ       = 640
 
-# FIX: Lowered from 0.35 → 0.20 for CPU inference.
-# On CPU, non-person objects (handbag, bottle, box) score 0.20–0.30.
-# Persons still score 0.80+ so this does not increase person false positives.
-CONF_THRESH = 0.20
+# FIX: Lowered 0.35 → 0.18 for CPU inference.
+# Handbag/bottle: 0.20–0.30 on CPU. Small thrown objects: 0.15–0.22.
+CONF_THRESH = 0.18
 
-# FIX: Raised from 0.20 → 0.45.
-# 0.20 was suppressing small objects that slightly overlapped persons.
-# 0.45 matches the FUSION_IOU_THRESH and is the standard NMS threshold.
+# FIX: Raised 0.20 → 0.45 — standard NMS threshold.
 IOU_THRESH  = 0.45
 
 KEEP_CLASSES = {
@@ -59,7 +52,7 @@ KEEP_CLASSES = {
 
 # ── Trash detection ────────────────────────────────────────────────────────────
 TRASH_ENABLE          = True
-TRASH_MIN_AREA        = 600
+TRASH_MIN_AREA        = 400    # FIX: lowered 600→400 to catch small thrown objects
 TRASH_HISTORY         = 200
 TRASH_DIST2THRESHOLD  = 50.0
 TRASH_LABEL           = "trash"
