@@ -1,7 +1,6 @@
-# MarkdownVidTrace  
-### Agentic AI System for Illegal Dumping Detection & Automated Enforcement
+# A Causal Event-Driven Agentic AI Framework for Offline Illegal Dumping Detection in Video
 
-MarkdownVidTrace is a modular surveillance framework that detects illegal dumping in public spaces using computer vision, temporal reasoning, and automated enforcement workflows.
+The project is a modular surveillance framework that detects illegal dumping in public spaces using computer vision, temporal reasoning, and automated enforcement workflows.
 
 The system processes live CCTV streams or recorded footage, tracks people and objects across frames, determines whether disposal behaviour is legal or illegal, and automatically generates a challan (penalty notice) with evidence extraction and email delivery.
 
@@ -173,23 +172,34 @@ weights/
 
 # ▶️ Running the Project
 
-## Full Pipeline
-
+### Process video input
 ```bash
-python run_pipeline.py
+python run_pipeline.py --source test2.mp4
+```
+### Save processed output video
+```bash
+python run_pipeline.py --source test2.mp4 --save
+```
+### Run with custom violation location
+```bash
+python run_pipeline.py --source test2.mp4 --save --location "MG Road, Bengaluru"
 ```
 
-## Individual Layers
+# ⚡ Penalty Escalation Simulation
 
-### Layer 1
+Simulate overdue challan escalation directly from terminal:
+
 ```bash
-python Layer1/run.py
+python -c "
+from penalty_manager import PenaltyManager
+pm = PenaltyManager()
+pm.simulate_days_passed('BBMP-VH-KA05KK5546-1DE0619F', 10)
+"
 ```
 
-### Layer 2
-```bash
-python Layer2/run.py
-```
+This applies escalation rules and updates the challan amount based on overdue duration.
+
+---
 
 ---
 
