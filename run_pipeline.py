@@ -134,6 +134,23 @@ except Exception as _e:
     _penalty_manager   = None
     print(f"[Challan] penalty_manager.py error on load: {_e}")
 
+# ── DeliveryAgent (email notifications) ───────────────────────────────────────
+try:
+    from delivery_agent import DeliveryAgent
+    _delivery_agent    = DeliveryAgent()
+    _delivery_agent.start()          # starts APScheduler background thread
+    DELIVERY_AVAILABLE = True
+    print("[Delivery] delivery_agent.py loaded — email notifications active")
+except ImportError as _e:
+    DELIVERY_AVAILABLE = False
+    _delivery_agent    = None
+    print(f"[Delivery] delivery_agent.py not available: {_e}")
+    print("           Run: pip install apscheduler")
+except Exception as _e:
+    DELIVERY_AVAILABLE = False
+    _delivery_agent    = None
+    print(f"[Delivery] delivery_agent.py error on load: {_e}")
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  Plate overlay
@@ -369,6 +386,13 @@ def run(source: str, save: bool = False, location: str = "",
                     if pdf_path:
                         print(f"[Challan] 📄 PDF → {pdf_path}")
 
+                    # Send email notification immediately after challan is issued
+                    if DELIVERY_AVAILABLE and _delivery_agent is not None:
+                        try:
+                            _delivery_agent.notify_new_challan(challan_id)
+                        except Exception as _ne:
+                            print(f"[Delivery] Email notification failed: {_ne}")
+
                 except Exception as _ce:
                     print(f"[Challan] ⚠️  Failed to issue challan for "
                           f"{event_key}: {_ce}")
@@ -420,6 +444,10 @@ def run(source: str, save: bool = False, location: str = "",
     if writer:
         writer.release()
     cv2.destroyAllWindows()
+
+    # Shutdown delivery agent scheduler cleanly
+    if DELIVERY_AVAILABLE and _delivery_agent is not None:
+        _delivery_agent.stop()
 
     print(f"\n[Pipeline] Done. Frames: {frame_idx}")
 
