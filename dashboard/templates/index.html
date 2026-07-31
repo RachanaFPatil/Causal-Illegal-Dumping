@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VidTrace — Admin Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --navy:#1B2A6B; --orange:#E8500A; --red:#CC0000; --green:#1A7A4A;
+  --bg:#F4F6FB; --card:#fff; --border:#E0E4EF; --text:#2C3358;
+  --muted:#6B7280; --badge-h:28px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+a{text-decoration:none;color:inherit}
+
+/* ── Sidebar ── */
+#sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--navy);
+  display:flex;flex-direction:column;z-index:100}
+#sidebar .logo{padding:20px 16px 12px;border-bottom:1px solid rgba(255,255,255,0.1)}
+#sidebar .logo h1{color:#fff;font-size:16px;font-weight:700;letter-spacing:.5px}
+#sidebar .logo p{color:rgba(255,255,255,.5);font-size:11px;margin-top:2px}
+#sidebar nav{flex:1;padding:12px 0;overflow-y:auto}
+#sidebar nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;
+  color:rgba(255,255,255,.7);font-size:13px;transition:.15s}
+#sidebar nav a:hover,#sidebar nav a.active{background:rgba(255,255,255,.12);color:#fff}
+#sidebar nav a .icon{width:18px;text-align:center;font-size:16px}
+#sidebar .sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.4);font-size:11px}
+
+/* ── Main ── */
+#main{margin-left:220px;min-height:100vh;display:flex;flex-direction:column}
+#topbar{background:#fff;border-bottom:1px solid var(--border);padding:0 24px;
+  height:52px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:50}
+#topbar h2{font-size:15px;font-weight:600}
+#topbar .actions{display:flex;gap:8px;align-items:center}
+
+.btn{padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;
+  border:1px solid var(--border);background:#fff;color:var(--text);transition:.15s}
+.btn:hover{background:var(--bg)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.primary:hover{opacity:.9}
+.btn.danger{background:var(--red);color:#fff;border-color:var(--red)}
+.btn.danger:hover{opacity:.9}
+.btn.success{background:var(--green);color:#fff;border-color:var(--green)}
+.btn.orange{background:var(--orange);color:#fff;border-color:var(--orange)}
+
+#content{padding:20px 24px;flex:1}
+
+.section{display:none}
+.section.active{display:block}
+
+/* ── Stat cards ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:16px;display:flex;flex-direction:column;gap:4px}
+.stat-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.stat-card .value{font-size:24px;font-weight:700}
+.stat-card.accent-orange .value{color:var(--orange)}
+.stat-card.accent-navy .value{color:var(--navy)}
+.stat-card.accent-red .value{color:var(--red)}
+.stat-card.accent-green .value{color:var(--green)}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:16px;margin-bottom:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;color:var(--navy)}
+
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.chart-box canvas{max-height:220px}
+
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{background:#F8F9FC;font-size:11px;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.4px;padding:8px 10px;
+  border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle;font-size:13px}
+tr:hover td{background:#F8F9FF}
+tr:last-child td{border-bottom:none}
+
+.badge{display:inline-flex;align-items:center;height:var(--badge-h);padding:0 8px;
+  border-radius:5px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-pending{background:#FFF3E0;color:#E65100}
+.badge-notified{background:#E3F2FD;color:#1565C0}
+.badge-escalated{background:#FFEBEE;color:#B71C1C}
+.badge-paid{background:#E8F5E9;color:#1B5E20}
+.badge-vehicle{background:#EDE7F6;color:#4527A0}
+.badge-pedestrian{background:#FFF8E1;color:#F57F17}
+.badge-active{background:#FFF3E0;color:#E65100}
+.badge-resolved{background:#E8F5E9;color:#1B5E20}
+.badge-not_sent{background:#F5F5F5;color:#555}
+
+.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.filters input,.filters select{padding:6px 10px;border:1px solid var(--border);
+  border-radius:6px;font-size:13px;background:#fff}
+.filters input{min-width:180px}
+
+.empty{padding:40px;text-align:center;color:var(--muted)}
+
+/* ── Image viewer modal ── */
+#img-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);
+  z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+#img-modal img{max-width:90vw;max-height:80vh;border-radius:8px;
+  box-shadow:0 8px 40px rgba(0,0,0,.5)}
+#img-modal .close-btn{color:#fff;font-size:14px;cursor:pointer;
+  background:rgba(255,255,255,.15);padding:6px 16px;border-radius:6px;border:none}
+#img-modal .img-label{color:rgba(255,255,255,.7);font-size:12px}
+
+/* Leaflet map */
+#map-container{height:340px;border-radius:8px;margin-bottom:16px;
+  border:1px solid var(--border);overflow:hidden}
+
+@media(max-width:900px){
+  .chart-grid{grid-template-columns:1fr}
+  #sidebar{width:180px}
+  #main{margin-left:180px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ Image viewer modal ═══ -->
+<div id="img-modal" onclick="closeImgModal()">
+  <div class="img-label" id="img-modal-label"></div>
+  <img id="img-modal-img" src="" alt="Evidence"/>
+  <button class="close-btn" onclick="closeImgModal()">✕ Close</button>
+</div>
+
+<!-- ═══ Sidebar ═══ -->
+<div id="sidebar">
+  <div class="logo">
+    <h1>🎥 VidTrace</h1>
+    <p>Municipal Enforcement</p>
+  </div>
+  <nav>
+    <a href="#" class="active" onclick="show('overview',this)">
+      <span class="icon">📊</span>Overview</a>
+    <a href="#" onclick="show('violations',this)">
+      <span class="icon">⚠️</span>Violations</a>
+    <a href="#" onclick="show('challans',this)">
+      <span class="icon">📄</span>Challans</a>
+    <a href="#" onclick="show('faceid',this)">
+      <span class="icon">👤</span>Face ID</a>
+    <a href="#" onclick="show('hotspots',this)">
+      <span class="icon">🔥</span>Hotspots</a>
+    <a href="#" onclick="show('notifications',this)">
+      <span class="icon">📧</span>Notifications</a>
+    <a href="#" onclick="show('analytics',this)">
+      <span class="icon">📈</span>Analytics</a>
+  </nav>
+  <div class="sidebar-footer">VidTrace v2.0 · BBMP SWM</div>
+</div>
+
+<!-- ═══ Main ═══ -->
+<div id="main">
+  <div id="topbar">
+    <h2 id="page-title">Overview</h2>
+    <div class="actions">
+      <button class="btn" onclick="refreshAll()">↻ Refresh</button>
+      <button class="btn primary" onclick="openEscModal()">⚡ Run Escalation</button>
+      <!-- FIX 4: Clear / Reset all data for fresh demo run -->
+      <button class="btn danger" onclick="confirmClearDB()"
+        title="Delete all violations, hotspots and PDFs for a fresh demo run">
+        🗑 Reset DB
+      </button>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- ══ OVERVIEW ══ -->
+    <div id="sec-overview" class="section active">
+      <div class="stat-grid">
+        <div class="stat-card accent-navy"><div class="label">Total Violations</div>
+          <div class="value" id="s-total">–</div></div>
+        <div class="stat-card accent-orange"><div class="label">Pending</div>
+          <div class="value" id="s-pending">–</div></div>
+        <div class="stat-card accent-red"><div class="label">Escalated</div>
+          <div class="value" id="s-escalated">–</div></div>
+        <div class="stat-card accent-green"><div class="label">Paid</div>
+          <div class="value" id="s-paid">–</div></div>
+        <div class="stat-card accent-navy"><div class="label">Total Hotspots</div>
+          <div class="value" id="s-hotspots">–</div></div>
+        <div class="stat-card accent-red"><div class="label">Unknown Faces</div>
+          <div class="value" id="s-unknown">–</div></div>
+        <div class="stat-card accent-green"><div class="label">Collected (Rs.)</div>
+          <div class="value" id="s-collected">–</div></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-box">
+          <div class="card-header"><span class="card-title">Violations (last 30 days)</span></div>
+          <canvas id="chart-daily"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="card-header"><span class="card-title">Status Distribution</span></div>
+          <canvas id="chart-status"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Recent Violations</span>
+          <button class="btn" onclick="show('violations',document.querySelector('nav a:nth-child(2)'))">
+            View All</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>Challan ID</th><th>Type</th><th>Plate / Name</th>
+              <th>Location</th><th>Amount</th><th>Status</th><th>Time</th>
+            </tr></thead>
+            <tbody id="tbl-recent"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIOLATIONS ══ -->
+    <!-- FIX 3: removed 📋 note button that caused Internal Server Error -->
+    <div id="sec-violations" class="section">
+      <div class="filters">
+        <input type="text" id="v-search" placeholder="Search challan / plate / name…"
+          oninput="loadViolations()"/>
+        <select id="v-status" onchange="loadViolations()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="notified">Notified</option>
+          <option value="escalated">Escalated</option>
+          <option value="paid">Paid</option>
+        </select>
+        <select id="v-type" onchange="loadViolations()">
+          <option value="">All Types</option>
+          <option value="vehicle">Vehicle</option>
+          <option value="pedestrian">Pedestrian</option>
+        </select>
+        <button class="btn primary" onclick="loadViolations()">🔍 Search</button>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>Challan ID</th><th>Type</th><th>Plate</th>
+              <th>Owner</th><th>Location</th><th>Amount</th>
+              <th>Due Date</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="tbl-violations"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CHALLANS ══ -->
+    <!-- FIX 1: PDF button now uses /api/challan/<id>/pdf with absolute path resolution -->
+    <div id="sec-challans" class="section">
+      <div class="card" style="padding:0">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>Challan ID</th><th>Plate</th><th>Owner</th>
+              <th>Amount</th><th>Status</th><th>Download PDF</th><th>Regenerate</th>
+            </tr></thead>
+            <tbody id="tbl-challans"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FACE ID ══ -->
+    <!-- FIX 2: Evidence/Face Crop view buttons use /api/evidence-by-path?path=... -->
+    <div id="sec-faceid" class="section">
+      <div class="stat-grid">
+        <div class="stat-card accent-navy"><div class="label">Registered Offenders</div>
+          <div class="value" id="fid-offenders">–</div></div>
+</div>
+
+      <div class="card">
+        <div class="card-header"><span class="card-title">Registered Offenders</span></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>ID</th><th>Name</th><th>Email</th><th>Phone</th>
+              <th>Address</th><th>Violations</th><th>Registered</th>
+            </tr></thead>
+            <tbody id="tbl-offenders"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HOTSPOTS ══ -->
+    <div id="sec-hotspots" class="section">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Hotspot Map</span>
+          <button class="btn primary" onclick="runHotspotCheck()">▶ Run Check</button>
+        </div>
+        <div id="map-container"></div>
+      </div>
+      <div class="card" style="padding:0">
+        <div class="card-header" style="padding:12px 16px">
+          <span class="card-title">All Hotspots</span>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>Hotspot ID</th><th>Location</th><th>Violations</th>
+              <th>First Seen</th><th>Last Seen</th><th>Status</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="tbl-hotspots"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NOTIFICATIONS ══ -->
+    <div id="sec-notifications" class="section">
+      <div class="card" style="padding:0">
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr>
+              <th>Challan ID</th><th>Owner</th><th>Email</th>
+              <th>Notified At</th><th>Email Status</th><th>Amount</th><th>Actions</th>
+            </tr></thead>
+            <tbody id="tbl-notifications"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ANALYTICS ══ -->
+    <div id="sec-analytics" class="section">
+      <div class="chart-grid">
+        <div class="chart-box">
+          <div class="card-header"><span class="card-title">Violations by Type</span></div>
+          <canvas id="chart-type"></canvas>
+        </div>
+        <div class="chart-box">
+          <div class="card-header"><span class="card-title">Revenue vs Collected (Rs.)</span></div>
+          <canvas id="chart-revenue"></canvas>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-box" style="grid-column:1/-1">
+          <div class="card-header"><span class="card-title">Daily Violation Trend</span></div>
+          <canvas id="chart-trend" style="max-height:280px"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══ Escalation Modal ═══ -->
+<div id="modal-escalation" style="display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:10px;padding:28px 32px;min-width:340px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.18)">
+    <h3 style="margin:0 0 16px;color:#1B2A6B">Simulate Penalty Escalation</h3>
+    <p style="color:#555;font-size:13px;margin-bottom:18px">
+      Enter the number of days since the violation to simulate.<br>
+      If &gt; 7 days: base penalty +10% every 2 days overdue.
+    </p>
+    <label style="font-size:13px;font-weight:600">Days passed since violation:</label><br>
+    <input id="esc-days-input" type="number" min="1" max="365" value="10"
+      style="width:100%;margin:8px 0 18px;padding:8px;border:1px solid #ccc;
+      border-radius:6px;font-size:15px">
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn"
+        onclick="document.getElementById('modal-escalation').style.display='none'">
+        Cancel</button>
+      <button class="btn primary" onclick="confirmEscalation()">Run Escalation</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+// ─── Image modal ──────────────────────────────────────────────────────────────
+function showImage(url, label) {
+  const modal = document.getElementById('img-modal');
+  document.getElementById('img-modal-img').src = url;
+  document.getElementById('img-modal-label').textContent = label || '';
+  modal.style.display = 'flex';
+}
+function closeImgModal() {
+  document.getElementById('img-modal').style.display = 'none';
+  document.getElementById('img-modal-img').src = '';
+}
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+function show(name, linkEl) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(`sec-${name}`).classList.add('active');
+  if (linkEl) linkEl.classList.add('active');
+  const titles = {overview:'Overview',violations:'Violations',challans:'Challans',
+    faceid:'Face ID',hotspots:'Hotspots',notifications:'Notifications',analytics:'Analytics'};
+  document.getElementById('page-title').textContent = titles[name] || name;
+  loaders[name] && loaders[name]();
+}
+
+// ─── Fetch helpers ────────────────────────────────────────────────────────────
+async function api(path) {
+  try {
+    const r = await fetch(API + path);
+    if (!r.ok) {
+      const txt = await r.text();
+      console.error('API error', path, r.status, txt);
+      return null;
+    }
+    return await r.json();
+  } catch(e) { console.error(path, e); return null; }
+}
+
+async function apiPost(path, body={}) {
+  try {
+    const r = await fetch(API + path, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    return await r.json();
+  } catch(e) { console.error(path, e); return null; }
+}
+
+// ─── Badges / formatters ──────────────────────────────────────────────────────
+function badge(val, map) {
+  const cls = map[val] || 'badge-pending';
+  return `<span class="badge ${cls}">${val || '—'}</span>`;
+}
+const statusMap = {pending:'badge-pending',notified:'badge-notified',
+  escalated:'badge-escalated',paid:'badge-paid'};
+const typeMap   = {vehicle:'badge-vehicle',pedestrian:'badge-pedestrian'};
+const unkMap    = {pending:'badge-escalated',reviewed:'badge-paid',ignored:'badge-notified'};
+const hsMap     = {active:'badge-active',escalated:'badge-escalated',resolved:'badge-resolved'};
+
+function fmtAmt(v) { return `<b>₹${parseFloat(v||0).toFixed(0)}</b>`; }
+function fmtDate(s) { return s ? s.substring(0,16) : '—'; }
+
+// ─── Overview ─────────────────────────────────────────────────────────────────
+async function loadOverview() {
+  const s = await api('/api/summary');
+  if (!s) return;
+  document.getElementById('s-total').textContent     = s.total || 0;
+  document.getElementById('s-pending').textContent   = s.pending || 0;
+  document.getElementById('s-escalated').textContent = s.escalated || 0;
+  document.getElementById('s-paid').textContent      = s.paid || 0;
+  document.getElementById('s-hotspots').textContent  = s.total_hotspots || 0;
+  document.getElementById('s-unknown').textContent   = s.unknown_faces_pending || 0;
+  document.getElementById('s-collected').textContent = parseFloat(s.collected||0).toFixed(0);
+
+  const rows = await api('/api/violations?limit=8');
+  document.getElementById('tbl-recent').innerHTML = (rows||[]).map(r=>`
+    <tr>
+      <td><code style="font-size:11px">${r.challan_id}</code></td>
+      <td>${badge(r.challan_type,typeMap)}</td>
+      <td>${r.plate_number||r.owner_name||'—'}</td>
+      <td>${r.location||'—'}</td>
+      <td>${fmtAmt(r.penalty_amount)}</td>
+      <td>${badge(r.status,statusMap)}</td>
+      <td style="color:var(--muted);font-size:11px">${fmtDate(r.violation_timestamp)}</td>
+    </tr>`).join('') || '<tr><td colspan="7" class="empty">No violations yet.</td></tr>';
+
+  loadDailyChart();
+  loadStatusChart();
+}
+
+// ─── Violations ───────────────────────────────────────────────────────────────
+// FIX 3: removed 📋 (notes) button that was causing Internal Server Error.
+// Only two action buttons remain: 📄 PDF and ✓ Paid.
+async function loadViolations() {
+  const q  = document.getElementById('v-search').value;
+  const st = document.getElementById('v-status').value;
+  const tp = document.getElementById('v-type').value;
+  const rows = await api(
+    `/api/violations?search=${encodeURIComponent(q)}&status=${st}&type=${tp}&limit=200`
+  );
+  document.getElementById('tbl-violations').innerHTML = (rows||[]).map(r=>`
+    <tr>
+      <td><code style="font-size:11px">${r.challan_id}</code></td>
+      <td>${badge(r.challan_type,typeMap)}</td>
+      <td>${r.plate_number||'—'}</td>
+      <td>${r.owner_name||'—'}</td>
+      <td>${r.location||'—'}</td>
+      <td>${fmtAmt(r.penalty_amount)}</td>
+      <td style="font-size:11px">${r.due_date||'—'}</td>
+      <td>${badge(r.status,statusMap)}</td>
+      <td style="white-space:nowrap">
+        <button class="btn orange" style="font-size:11px;padding:3px 10px"
+          onclick="downloadPDF('${r.challan_id}')">📄 PDF</button>
+        ${r.status!=='paid'?`<button class="btn success" style="font-size:11px;padding:3px 10px"
+          onclick="markPaid('${r.challan_id}')">✓ Paid</button>`:''}
+      </td>
+    </tr>`).join('') || '<tr><td colspan="9" class="empty">No violations found.</td></tr>';
+}
+
+async function markPaid(cid) {
+  const txn = prompt(`Mark ${cid} as paid.\nEnter transaction ID (optional):`);
+  if (txn === null) return;
+  const r = await apiPost(`/api/violations/${cid}/mark-paid`, {transaction_id: txn});
+  if (r && r.success) {
+    loadViolations(); loadOverview();
+  } else {
+    alert('Failed to mark as paid: ' + (r && r.error ? r.error : 'Unknown error'));
+  }
+}
+
+// FIX 1: PDF download — backend now resolves absolute path.
+// Opens in new tab as PDF so browser shows it inline or downloads it.
+function downloadPDF(cid) {
+  window.open(`/api/challan/${cid}/pdf`, '_blank');
+}
+
+// ─── Challans ─────────────────────────────────────────────────────────────────
+async function loadChallans() {
+  const rows = await api('/api/violations?limit=200');
+  document.getElementById('tbl-challans').innerHTML = (rows||[]).map(r=>`
+    <tr>
+      <td><code style="font-size:11px">${r.challan_id}</code></td>
+      <td>${r.plate_number||'N/A'}</td>
+      <td>${r.owner_name||'—'}</td>
+      <td>${fmtAmt(r.penalty_amount)}</td>
+      <td>${badge(r.status,statusMap)}</td>
+      <td>
+        <button class="btn orange" style="font-size:11px;padding:3px 10px"
+          onclick="downloadPDF('${r.challan_id}')">⬇ Download PDF</button>
+      </td>
+      <td>
+        <button class="btn" style="font-size:11px;padding:3px 10px"
+          onclick="regenPDF('${r.challan_id}')">↻ Regen</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" class="empty">No challans.</td></tr>';
+}
+
+async function regenPDF(cid) {
+  const r = await apiPost(`/api/challan/${cid}/regenerate`);
+  if (r && r.success) {
+    alert(`PDF regenerated for ${cid}\nYou can now download it.`);
+    loadChallans();
+  } else {
+    alert('Regeneration failed. Check the server logs.');
+  }
+}
+
+// ─── Face ID ──────────────────────────────────────────────────────────────────
+// FIX 2: Evidence and Face Crop view buttons now use /api/evidence-by-path?path=...
+// which handles ALL path formats (Windows absolute, relative, any prefix).
+// Clicking shows image in the modal overlay rather than opening a new tab.
+async function loadFaceID() {
+  const offenders = await api('/api/faceid/offenders');
+
+  document.getElementById('fid-offenders').textContent = (offenders||[]).length;
+document.getElementById('tbl-offenders').innerHTML =
+    (offenders||[]).map(r=>`
+    <tr>
+      <td>${r.id}</td>
+      <td><b>${r.name}</b></td>
+      <td>${r.email||'—'}</td>
+      <td>${r.phone||'—'}</td>
+      <td>${r.address||'—'}</td>
+      <td><span class="badge badge-escalated">${r.violation_count}</span></td>
+      <td style="font-size:11px">${fmtDate(r.registered_on)}</td>
+    </tr>`).join('') || '<tr><td colspan="7" class="empty">No offenders registered.</td></tr>';
+}
+
+// FIX 2: Central image viewer — calls /api/evidence-by-path?path=<raw_db_path>
+function viewEvidence(storedPath, label) {
+  if (!storedPath) { alert('No image path recorded for this event.'); return; }
+  // Use the dedicated endpoint that handles all path formats server-side
+  const url = `/api/evidence-by-path?path=${encodeURIComponent(storedPath)}`;
+  showImage(url, label);
+}
+
+async function updateFaceStatus(id, status) {
+  const r = await apiPost(`/api/faceid/unknown/${id}/status`, {status});
+  if (r && r.success) {
+    loadFaceID();
+  } else {
+    alert('Update failed: ' + (r && r.error ? r.error : 'Unknown'));
+  }
+}
+
+// ─── Hotspots ─────────────────────────────────────────────────────────────────
+let _leafletMap = null;
+let _leafletMarkers = [];
+
+async function loadHotspots() {
+  const hotspots = await api('/api/hotspots');
+
+  // Init Leaflet once
+  if (!_leafletMap) {
+    _leafletMap = L.map('map-container').setView([12.97, 77.59], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors', maxZoom: 19,
+    }).addTo(_leafletMap);
+  }
+  _leafletMarkers.forEach(m => m.remove());
+  _leafletMarkers = [];
+
+  const hasgeo = (hotspots||[]).some(h => h.latitude || h.longitude);
+  if (hasgeo) {
+    const bounds = [];
+    (hotspots||[]).forEach(h => {
+      if (!h.latitude && !h.longitude) return;
+      const color = h.status === 'escalated' ? '#CC0000' : '#E8500A';
+      const m = L.circleMarker([h.latitude, h.longitude], {
+        radius: Math.min(8 + h.violation_count * 2, 24),
+        fillColor: color, color: '#fff', weight: 2, fillOpacity: 0.85,
+      }).addTo(_leafletMap);
+      m.bindPopup(`<b>${h.location_name||'Unknown'}</b><br>
+        Violations: <b>${h.violation_count}</b><br>
+        Status: <b>${h.status}</b><br>
+        First: ${h.first_seen||'—'} | Last: ${h.last_seen||'—'}`);
+      _leafletMarkers.push(m);
+      bounds.push([h.latitude, h.longitude]);
+    });
+    if (bounds.length) {
+      _leafletMap.fitBounds(bounds, {padding:[40,40], maxZoom:15});
+      setTimeout(()=>_leafletMap.invalidateSize(),150);
+    }
+  }
+
+  document.getElementById('tbl-hotspots').innerHTML =
+    (hotspots||[]).map(h=>`
+    <tr>
+      <td><code style="font-size:11px">${h.hotspot_id}</code></td>
+      <td>${h.location_name||'—'}</td>
+      <td><b style="color:var(--red)">${h.violation_count}</b></td>
+      <td style="font-size:11px">${fmtDate(h.first_seen)}</td>
+      <td style="font-size:11px">${fmtDate(h.last_seen)}</td>
+      <td>${badge(h.status, hsMap)}</td>
+      <td style="white-space:nowrap">
+        ${h.status!=='resolved'
+          ? `<button class="btn success" style="font-size:11px;padding:3px 8px"
+              onclick="resolveHotspot('${h.hotspot_id}')">✓ Resolve</button>`
+          : ''}
+        <button class="btn" style="font-size:11px;padding:3px 8px"
+          onclick="window.open('/api/hotspots/${h.hotspot_id}/report','_blank')">
+          📋 Report</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="7" class="empty">No hotspots detected yet.</td></tr>';
+}
+
+async function runHotspotCheck() {
+  const r = await apiPost('/api/hotspots/run-check');
+  if (r) alert(`Hotspot check done.\nEscalated: ${r.escalated_count} hotspot(s).`);
+  loadHotspots();
+}
+
+async function resolveHotspot(id) {
+  await apiPost(`/api/hotspots/${id}/resolve`);
+  loadHotspots();
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+async function loadNotifications() {
+  const rows = await api('/api/notifications');
+  document.getElementById('tbl-notifications').innerHTML =
+    (rows||[]).map(r => {
+      const notifAt = r.notification_status === 'sent'
+        ? (r.created_at ? new Date(r.created_at).toLocaleString() : 'Sent')
+        : r.notification_status === 'failed' ? '❌ Failed'
+        : r.notification_status === 'no_email' ? 'No email on file'
+        : '—';
+      return `<tr>
+        <td><code style="font-size:11px">${r.challan_id}</code></td>
+        <td>${r.owner_name||'—'}</td>
+        <td style="font-size:11px">${r.email||'—'}</td>
+        <td style="font-size:11px;color:#444">${notifAt}</td>
+        <td>${badge(r.notification_status||'not_sent',
+          {sent:'badge-paid',failed:'badge-escalated',
+           no_email:'badge-notified',not_sent:'badge-not_sent'})}</td>
+        <td>${fmtAmt(r.penalty_amount)}</td>
+        <td>
+          <button class="btn" style="font-size:11px;padding:3px 8px"
+            onclick="resendEmail('${r.challan_id}')">↻ Resend</button>
+        </td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="7" class="empty">No notifications.</td></tr>';
+}
+
+async function resendEmail(cid) {
+  const r = await apiPost(`/api/notifications/${cid}/resend`);
+  alert(r && r.success ? `Email sent for ${cid}` : `Failed: ${r && r.error ? r.error : 'unknown'}`);
+  loadNotifications();
+}
+
+// ─── Analytics charts ─────────────────────────────────────────────────────────
+let chartInstances = {};
+function mkChart(id, type, data, opts={}) {
+  if (chartInstances[id]) chartInstances[id].destroy();
+  chartInstances[id] = new Chart(document.getElementById(id), {
+    type, data,
+    options: { responsive:true, plugins:{legend:{position:'bottom'}}, ...opts }
+  });
+}
+
+async function loadDailyChart() {
+  const d = await api('/api/charts/violations-by-day');
+  if (!d) return;
+  mkChart('chart-daily','bar',{
+    labels: d.map(r=>r.day).reverse(),
+    datasets:[{label:'Violations',data:d.map(r=>r.count).reverse(),
+      backgroundColor:'rgba(27,42,107,0.7)'}]
+  },{plugins:{legend:{display:false}}});
+}
+
+async function loadStatusChart() {
+  const d = await api('/api/charts/status-distribution');
+  if (!d) return;
+  const colors = {pending:'#E65100',notified:'#1565C0',escalated:'#B71C1C',paid:'#1B5E20'};
+  mkChart('chart-status','doughnut',{
+    labels: d.map(r=>r.status),
+    datasets:[{data:d.map(r=>r.count), backgroundColor:d.map(r=>colors[r.status]||'#888')}]
+  });
+}
+
+async function loadAnalytics() {
+  const [byType, revenue, daily] = await Promise.all([
+    api('/api/charts/violations-by-type'),
+    api('/api/charts/revenue'),
+    api('/api/charts/violations-by-day'),
+  ]);
+  if (byType) {
+    const cols = {vehicle:'rgba(27,42,107,.8)',pedestrian:'rgba(232,80,10,.8)'};
+    mkChart('chart-type','doughnut',{
+      labels: byType.map(r=>r.challan_type),
+      datasets:[{data:byType.map(r=>r.count),
+        backgroundColor:byType.map(r=>cols[r.challan_type]||'#888')}]
+    });
+  }
+  if (revenue) {
+    const rev = revenue.slice(0,14).reverse();
+    mkChart('chart-revenue','bar',{
+      labels: rev.map(r=>r.day),
+      datasets:[
+        {label:'Total Rs.',data:rev.map(r=>r.total||0),backgroundColor:'rgba(27,42,107,.5)'},
+        {label:'Collected Rs.',data:rev.map(r=>r.collected||0),backgroundColor:'rgba(26,122,74,.7)'},
+      ]
+    },{scales:{y:{beginAtZero:true}}});
+  }
+  if (daily) {
+    const d = daily.slice(0,30).reverse();
+    mkChart('chart-trend','line',{
+      labels: d.map(r=>r.day),
+      datasets:[{label:'Violations',data:d.map(r=>r.count),
+        borderColor:'var(--navy)',backgroundColor:'rgba(27,42,107,.08)',fill:true,tension:.3}]
+    },{plugins:{legend:{display:false}}});
+  }
+}
+
+// ─── Escalation modal ─────────────────────────────────────────────────────────
+function openEscModal() {
+  document.getElementById('modal-escalation').style.display = 'flex';
+  document.getElementById('esc-days-input').focus();
+}
+
+async function confirmEscalation() {
+  document.getElementById('modal-escalation').style.display = 'none';
+  const days = parseInt(document.getElementById('esc-days-input').value) || 0;
+  const r = await apiPost('/api/violations/simulate-escalation', {days});
+  if (r && r.success) {
+    alert(`Escalation complete.\nDays simulated: ${r.days_simulated}\nViolations escalated: ${r.escalated}`);
+  } else {
+    alert('Escalation failed: ' + (r && r.error ? r.error : 'Unknown error'));
+  }
+  refreshAll();
+}
+
+// FIX 4: Reset / Clear DB — wipes all violations, hotspots, PDFs for a clean demo run.
+// Keeps the owners table and registered offenders (face DB) intact.
+async function confirmClearDB() {
+  const ok = confirm(
+    '⚠ RESET DATABASE\n\n' +
+    'This will permanently delete:\n' +
+    '  • All violations and challans\n' +
+    '  • All hotspot records\n' +
+    '  • All generated PDFs\n' +
+    '  • Unknown face queue\n\n' +
+    'Registered offenders (face DB) and vehicle owners will be kept.\n\n' +
+    'Continue?'
+  );
+  if (!ok) return;
+  const r = await apiPost('/api/db/clear');
+  if (r && r.success) {
+    alert('✅ ' + r.message + '\n\nDashboard will now show empty state.');
+    refreshAll();
+  } else {
+    alert('Reset failed: ' + (r && r.error ? r.error : 'Unknown error'));
+  }
+}
+
+function refreshAll() {
+  const active = document.querySelector('.section.active');
+  if (active) {
+    const name = active.id.replace('sec-', '');
+    loaders[name] && loaders[name]();
+  }
+  loadOverview();
+}
+
+const loaders = {
+  overview:      loadOverview,
+  violations:    loadViolations,
+  challans:      loadChallans,
+  faceid:        loadFaceID,
+  hotspots:      loadHotspots,
+  notifications: loadNotifications,
+  analytics:     loadAnalytics,
+};
+
+loadOverview();
+</script>
+</body>
+</html>

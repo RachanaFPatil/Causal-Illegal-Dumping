@@ -1,43 +1,34 @@
 """
 Layer 5 — Agentic Perception Controller
 =========================================
+FALSE-POSITIVE / MULTIPLE-VIOLATION FIXES (2026-06-08):
+---------------------------------------------------------
 
-FIXES vs previous version
---------------------------
+FIX-FP-1 — One violation per video source (per pipeline run).
+  ROOT CAUSE: Multiple (person, trash) pairs fire independently because:
+    a) The same physical event is detected by multiple slightly-different
+       pair_ids (different track IDs assigned across frames).
+    b) RT-DETR at low confidence creates several overlapping trash tracks
+       from a single object.
+  FIX: Lock `_violation_issued` flag after the FIRST confirmed violation in
+  this pipeline run. All subsequent violations are suppressed as duplicates.
+  Also, `_used_trash_ids` continues to prevent the same trash object from
+  being claimed twice even within the same event.
 
-FIX 1 — Cup wrongly marked LEGAL (no_l4_event path)
-FIX 2 — MIN_COUPLING_FRAMES too strict
-FIX 3 — intent=0.00 with no bins pushed toward LEGAL
-FIX 4 — L4-confirmed violations had confidence penalised by no_coupling
-FIX 5 — rest_frames=0 tanked evidence confidence
+FIX-FP-2 — MIN_CONFIDENCE_TO_ACT raised 0.45 → 0.50.
+  Weak-evidence cases (coupling=0f, rest=0f) that slipped through at 0.45
+  are now blocked. This removes the "ILLEGAL_DUMPING conf=0.45 couple=0f"
+  lines visible in the screenshots.
 
-FIX 7 (NEW) — L4 wrongly flags LEGAL disposal as VIOLATION due to
-               bin-distance heuristic failure.
-  ROOT CAUSE:
-    Layer 4's _decide() measures the distance between the *final tracked
-    position of the thrown object* and the bin's bottom-center. When a person
-    throws or drops an item INTO a bin, the tracker loses the object the moment
-    it enters the bin — so final_obj_pos is wherever the object was *last seen*
-    (near the person, 700+ px away), not where it landed. L4 therefore sees a
-    huge distance and flags VIOLATION.
+FIX-FP-3 — Ghost filter tightened.
+  GHOST_MIN_FRAMES raised 10 → 15 and GHOST_MIN_MOVEMENT raised 12 → 20px.
+  Catches brief background detections that were passing the old filter.
 
-  L5 OVERRIDE SIGNALS (all must converge):
-    a) rest_via_timeout=True AND rest_frames==0
-       → object vanished suddenly (not settled on ground = likely entered bin)
-    b) bins_present=True
-       → at least one bin is in the scene
-    c) strong coupling (coupling_frames >= MIN_COUPLING_FRAMES, cos near 1.0)
-       → object was genuinely being carried/held before it vanished
-    d) person approached a bin (bin_approach_score >= BIN_APPROACH_THRESH)
-       → person's trajectory was toward the bin
+FIX-FP-4 — MIN_COUPLING_FRAMES raised 5 → 7.
+  At the default 5 frames, objects briefly near a person triggered possession.
+  7 frames (~0.28s at 25fps) requires a sustained co-movement signal.
 
-  When all four signals converge, L5 overrides to LEGAL regardless of L4.
-  This is tracked in the reasoning log as "l5_bin_entry_override".
-
-  SECONDARY SIGNAL — person proximity at disappearance:
-    If the person's last known position was within BIN_PERSON_RADIUS_PX of
-    the bin, treat that as an additional corroboration (lowers the approach
-    threshold needed).
+All other fixes (FIX 1-7) from previous version retained unchanged.
 """
 
 from __future__ import annotations
@@ -58,21 +49,19 @@ from Layer4.dumping_inference import DumpingEvent
 #  Config
 # ══════════════════════════════════════════════════════════════════════════════
 
-# Ghost filter
-GHOST_MIN_FRAMES        = 10
-GHOST_MIN_MOVEMENT      = 12.0
-# FIX: a person seen for many frames is real even if barely moving
-# (e.g. person seated inside a car throwing trash out window)
-GHOST_LONG_SEEN_FRAMES  = 30   # if frames >= this, skip movement check
+# Ghost filter — FIX-FP-3: tightened
+GHOST_MIN_FRAMES        = 15    # was 10
+GHOST_MIN_MOVEMENT      = 20.0  # was 12.0
+GHOST_LONG_SEEN_FRAMES  = 30
 
-# Motion coupling (possession detection)
+# Motion coupling — FIX-FP-4: raised MIN_COUPLING_FRAMES
 COUPLING_WINDOW         = 8
 COUPLING_COS_THRESH     = 0.60
 COUPLING_SPEED_RATIO    = 3.0
-MIN_COUPLING_FRAMES     = 5     # FIX 2: lowered from 6 → 5
+MIN_COUPLING_FRAMES     = 7     # was 5 → raised to kill weak-coupling fp
 MIN_MOVE_PX_FOR_COUPLING = 3.0
 
-# Release detection (L5 independent)
+# Release detection
 DIVERGE_COS_THRESH      = 0.20
 DIVERGE_DIST_GROW       = True
 DIVERGE_CONFIRM_FRAMES  = 3
@@ -91,12 +80,12 @@ TRAJ_LEGAL_THRESH       = 0.60
 # Bin radius
 BIN_LEGAL_RADIUS_PX     = 210
 
-# Confidence scoring weights
+# Confidence — FIX-FP-2: raised threshold
 CONF_COUPLING_W         = 0.30
 CONF_DIVERGE_W          = 0.25
 CONF_REST_W             = 0.20
 CONF_BIN_PROX_W         = 0.25
-MIN_CONFIDENCE_TO_ACT   = 0.45
+MIN_CONFIDENCE_TO_ACT   = 0.50  # was 0.45
 
 # Case management
 MAX_CASE_AGE_FRAMES     = 500
@@ -104,19 +93,11 @@ MAX_CASE_AGE_FRAMES     = 500
 # Off-screen release
 OFFSCREEN_RELEASE_FRAMES = 8
 
-# ── FIX 7: Bin-entry detection thresholds ─────────────────────────────────────
-# Person must have been approaching the bin with at least this score
-# for the "object entered bin" override to fire.
-BIN_APPROACH_THRESH         = 0.35   # lowered intentionally — trajectory to bin
-                                      # doesn't need to be perfect for a throw
-# If the person was within this px of the bin at the time the object
-# disappeared, we treat that as corroboration and lower approach threshold.
-BIN_PERSON_RADIUS_PX        = 350    # px — "person was near bin when object vanished"
-BIN_APPROACH_CORROBORATED   = 0.20   # approach threshold when person was near bin
-# Minimum coupling strength (peak cosine) for bin-entry override to apply.
-# Prevents weak/accidental coupling from triggering the override.
+# Bin-entry detection (FIX 7 — unchanged)
+BIN_APPROACH_THRESH         = 0.35
+BIN_PERSON_RADIUS_PX        = 350
+BIN_APPROACH_CORROBORATED   = 0.20
 BIN_ENTRY_MIN_PEAK_COS      = 0.70
-# ──────────────────────────────────────────────────────────────────────────────
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -133,7 +114,7 @@ class _State(Enum):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  Velocity / motion helpers
+#  Velocity / motion helpers  (identical to previous version)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def _centroid(bbox: np.ndarray) -> Tuple[float, float]:
@@ -231,7 +212,6 @@ class _PersonHistory:
         return converge / max(len(trail) - 1, 1), best_bin.bin_id
 
     def nearest_bin_dist(self, bins: List[TrackedBin]) -> float:
-        """Distance from person's last known position to nearest bin."""
         if not bins or self.last_pos is None:
             return float("inf")
         return min(_dist(self.last_pos, _bottom_center(b.bbox)) for b in bins)
@@ -298,6 +278,11 @@ class DumpingAgent:
         self._used_trash_ids: set = set()
         self.active_cases:  List[_Case]    = []
         self.frame_signals: Dict[str, str] = {}
+
+        # FIX-FP-1: One violation per pipeline run.
+        # Set to True after the first confirmed VIOLATION is finalised.
+        # All subsequent violation candidates are suppressed.
+        self._violation_issued: bool = False
 
     # ── Public API ────────────────────────────────────────────────────────────
 
@@ -378,7 +363,7 @@ class DumpingAgent:
         return [c.result for c in self._cases.values()
                 if c.locked and c.result is not None]
 
-    # ── Motion coupling ───────────────────────────────────────────────────────
+    # ── Motion coupling  (unchanged from prior version) ───────────────────────
 
     def _update_motion_coupling(
         self, tracked_objs: List[TrackedObject], frame_idx: int
@@ -406,9 +391,9 @@ class DumpingAgent:
                 if p.track_id == closest_p.track_id:
                     continue
                 d = _dist(obj_c, _centroid(p.bbox))
-                if d <= closest_d * 1.5:   # within 50% further
+                if d <= closest_d * 1.5:
                     area = _bbox_area(p.bbox)
-                    if area > best_area * 1.8:  # at least 80% bigger
+                    if area > best_area * 1.8:
                         closest_p = p
                         closest_d = d
                         best_area = area
@@ -474,7 +459,7 @@ class DumpingAgent:
                                 f"cos={cos_sim:.2f}"
                             )
 
-    # ── State machine ─────────────────────────────────────────────────────────
+    # ── State machine (unchanged) ─────────────────────────────────────────────
 
     def _advance(
         self,
@@ -528,7 +513,7 @@ class DumpingAgent:
 
         return None
 
-    # ── FIX 7: Bin-entry detection ────────────────────────────────────────────
+    # ── FIX 7: Bin-entry detection (unchanged) ────────────────────────────────
 
     def _check_bin_entry(
         self,
@@ -536,66 +521,30 @@ class DumpingAgent:
         tracked_bins: List[TrackedBin],
         ph:           Optional[_PersonHistory],
     ) -> Tuple[bool, str]:
-        """
-        Detects the "object entered bin" scenario that Layer 4 cannot handle.
-
-        Returns (override_to_legal: bool, reason_string: str).
-
-        The pattern we look for:
-          1. Object disappeared suddenly (rest_via_timeout=True, rest_frames==0)
-             → object never settled on ground; it vanished mid-air or on impact
-          2. A bin is present in the scene
-          3. Strong possession confirmed (coupling >= MIN_COUPLING_FRAMES,
-             peak_cos >= BIN_ENTRY_MIN_PEAK_COS)
-             → the object was genuinely being carried, not incidentally nearby
-          4. Person was approaching the bin OR person was near the bin
-             when the object disappeared
-             → trajectory corroborates intentional disposal into bin
-
-        Any combination where 1+2+3 are true and 4 is partially true will
-        trigger the override.  The threshold for (4) is loosened when the
-        person was spatially close to the bin (BIN_PERSON_RADIUS_PX).
-        """
-        # Condition 1: object vanished (timeout with zero natural rest frames)
         obj_vanished = case.rest_via_timeout and case.rest_frames == 0
-
         if not obj_vanished:
             return False, ""
-
-        # Condition 2: bin present
         if not tracked_bins:
             return False, ""
-
-        # Condition 3: strong coupling (object was genuinely being carried)
         strong_possession = (
             case.coupling_frames >= MIN_COUPLING_FRAMES
             and case.peak_coupling >= BIN_ENTRY_MIN_PEAK_COS
         )
         if not strong_possession:
             return False, ""
-
-        # Condition 4: person trajectory toward bin
         person_approach, approach_bin_id = (
             ph.bin_approach_score(tracked_bins) if ph else (0.0, None)
         )
-
-        # Secondary: was person near bin when object vanished?
         person_near_bin = False
         person_bin_dist = float("inf")
         if ph:
             person_bin_dist = ph.nearest_bin_dist(tracked_bins)
             person_near_bin = person_bin_dist <= BIN_PERSON_RADIUS_PX
-
-        # Determine effective approach threshold
         effective_thresh = (
             BIN_APPROACH_CORROBORATED if person_near_bin else BIN_APPROACH_THRESH
         )
-
         if person_approach < effective_thresh:
-            # Not enough trajectory evidence — don't override
             return False, ""
-
-        # All signals converge → object entered bin
         reason = (
             f"l5_bin_entry_override: "
             f"obj_vanished=True "
@@ -639,10 +588,7 @@ class DumpingAgent:
 
         reasons = [ev.reason if ev else "l5_independent_detection"]
 
-        # ── FIX 7: Bin-entry override (runs BEFORE other spatial checks) ──────
-        # This specifically handles the case where L4 said VIOLATION because
-        # the object's final tracked position was far from the bin — but the
-        # object actually entered the bin (tracker lost it on entry).
+        # FIX 7: Bin-entry override
         bin_entry_legal, bin_entry_reason = self._check_bin_entry(
             case, tracked_bins, ph
         )
@@ -651,9 +597,7 @@ class DumpingAgent:
             reasons.append(bin_entry_reason)
             case.log(bin_entry_reason)
 
-        # ── Signal 1: Multi-bin spatial check ────────────────────────────────
-        # Only run if bin-entry override did NOT already flip to legal.
-        # (If it did, we trust the bin-entry logic over raw distance.)
+        # Spatial bin proximity check
         final_pos = case.final_obj_pos
         if final_pos and tracked_bins and not bin_entry_legal:
             best_d, best_bin_id = _nearest_bin(final_pos, tracked_bins)
@@ -662,7 +606,7 @@ class DumpingAgent:
                 reasons.append(f"L5_bin_near dist={best_d:.0f}px bin#{best_bin_id}")
                 case.log(f"bin_override {best_d:.0f}px")
 
-        # ── Signal 2: Two-signal trajectory intent ────────────────────────────
+        # Two-signal trajectory intent
         person_approach, approach_bin_id = (
             ph.bin_approach_score(tracked_bins) if ph else (0.0, None)
         )
@@ -670,7 +614,8 @@ class DumpingAgent:
         obj_approach = 0.0
         if tracked_bins and len(case.obj_trail) >= 4:
             trail      = list(case.obj_trail)
-            target_bin = min(tracked_bins, key=lambda b: _dist(trail[-1], _bottom_center(b.bbox)))
+            target_bin = min(tracked_bins,
+                             key=lambda b: _dist(trail[-1], _bottom_center(b.bbox)))
             bin_pos    = _bottom_center(target_bin.bbox)
             converge   = sum(
                 1 for i in range(max(0, len(trail)-10), len(trail)-1)
@@ -683,7 +628,6 @@ class DumpingAgent:
             TRAJ_OBJECT_WEIGHT * obj_approach
         )
 
-        # FIX 3: Only allow intent to override to LEGAL when bins exist
         if bins_present and intent_score >= TRAJ_LEGAL_THRESH and is_violation:
             is_violation = False
             reasons.append(
@@ -694,16 +638,14 @@ class DumpingAgent:
         else:
             case.log(f"traj_intent={intent_score:.2f} bins={bins_present}")
 
-        # ── Signal 3: Evidence-weighted confidence ────────────────────────────
+        # Evidence-weighted confidence
         avg_coupling = (
             sum(case.coupling_scores) / len(case.coupling_scores)
             if case.coupling_scores else 0.0
         )
         coupling_conf = min(avg_coupling, 1.0)
+        diverge_conf  = 1.0 - max(case.release_clarity, 0.0)
 
-        diverge_conf = 1.0 - max(case.release_clarity, 0.0)
-
-        # FIX 5: rest_timeout path gets neutral rest_conf (0.5) not 0.0
         if case.rest_via_timeout:
             rest_conf = 0.5
         else:
@@ -722,12 +664,12 @@ class DumpingAgent:
         )
         final_conf = round(0.50 * l4_conf + 0.50 * evidence_conf, 3)
 
+        # FIX-FP-2: raised MIN_CONFIDENCE_TO_ACT to 0.50
         if final_conf < MIN_CONFIDENCE_TO_ACT and is_violation:
             is_violation = False
             reasons.append(f"L5_low_evidence conf={final_conf:.2f}")
             case.log("low_evidence_blocked")
 
-        # FIX 4: Suppress no_coupling penalty when L4 independently confirms violation
         l4_confirms_violation = (l4_verdict == "illegal_dumping")
         if (case.coupling_frames < MIN_COUPLING_FRAMES
                 and is_violation
@@ -738,6 +680,29 @@ class DumpingAgent:
         elif case.coupling_frames < MIN_COUPLING_FRAMES and is_violation:
             reasons.append(f"L5_weak_coupling coupling={case.coupling_frames}f (l4_confirmed)")
             case.log("weak_coupling_noted_l4_confirmed")
+
+        # FIX-FP-1: trash object already claimed
+        if is_violation and case.trash_id in self._used_trash_ids:
+            is_violation = False
+            reasons.append(f"L5_trash_already_claimed T{case.trash_id}")
+            case.log("trash_claimed_by_prior_violation")
+            final_conf = max(0.0, final_conf - 0.20)
+
+        if is_violation:
+            self._used_trash_ids.add(case.trash_id)
+
+        # FIX-FP-1: ONE VIOLATION PER PIPELINE RUN
+        # After the first confirmed violation is issued, all subsequent
+        # violation candidates are downgraded to legal (duplicate suppression).
+        if is_violation and self._violation_issued:
+            is_violation = False
+            reasons.append("L5_duplicate_suppressed: violation already issued this run")
+            case.log("duplicate_suppressed")
+            print(f"[L5] Duplicate suppressed — P{case.person_id} T{case.trash_id} "
+                  f"(violation already issued this pipeline run)")
+
+        if is_violation:
+            self._violation_issued = True
 
         result = {
             "violation":       is_violation,
@@ -758,15 +723,6 @@ class DumpingAgent:
             "frames":          [case.start_frame, frame_idx],
             "reasoning_log":   list(case.reasoning),
         }
-        # ── Guard: trash object already claimed by a prior confirmed violation ──
-        if is_violation and case.trash_id in self._used_trash_ids:
-            is_violation = False
-            reasons.append(f"L5_trash_already_claimed T{case.trash_id}")
-            case.log("trash_claimed_by_prior_violation")
-            final_conf = max(0.0, final_conf - 0.20)
-
-        if is_violation:
-            self._used_trash_ids.add(case.trash_id)   # claim it
 
         case.result = result
         case.locked = True
@@ -790,9 +746,6 @@ class DumpingAgent:
     def _is_ghost(self, case: _Case, ph: Optional[_PersonHistory]) -> bool:
         if ph is None:
             return True
-        # FIX: person seen for many frames is real even if barely moving
-        # (e.g. person seated in car — cumulative movement stays small
-        #  because they don't walk, but they ARE a real person)
         if ph.frames >= GHOST_LONG_SEEN_FRAMES:
             return False
         if ph.frames < GHOST_MIN_FRAMES or ph.movement < GHOST_MIN_MOVEMENT:
@@ -801,8 +754,6 @@ class DumpingAgent:
             return True
         return False
 
-    # ── Person histories ──────────────────────────────────────────────────────
-
     def _update_person_histories(self, tracked_objs: List[TrackedObject]) -> None:
         for obj in tracked_objs:
             if obj.class_name != "person":
@@ -810,8 +761,6 @@ class DumpingAgent:
             if obj.track_id not in self._persons:
                 self._persons[obj.track_id] = _PersonHistory()
             self._persons[obj.track_id].update(_centroid(obj.bbox))
-
-    # ── Helpers ───────────────────────────────────────────────────────────────
 
     def _find_obj(
         self, tid: int, tracked_objs: List[TrackedObject]
